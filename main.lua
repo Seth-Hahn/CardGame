@@ -2,7 +2,7 @@ local CardHolder = require "classes/CardHolder"
 local Player = require "classes/Player"
 local AI = require "classes/AI"
 local Card = require "classes/Card"
-
+local SubmitButton = require "classes/SubmitButton"
 require "libraries/middleclass"
 
 
@@ -38,6 +38,7 @@ function love.draw()
   love.graphics.draw(background)
   Player:drawToScreen()
   AI:drawToScreen()
+  submitButton:drawToScreen()
 end
 
 function love.update()
@@ -48,6 +49,8 @@ function love.mousepressed(mx, my, button)
     isMouseDown = true
     selectedObject = nil
     isDragging = false
+    
+    --iterate through all objects to determine which one was selected
     for i = 1, #drawableObjects, 1 do
       if clickOnObject(mx, my, drawableObjects[i]) then 
           selectedObject = drawableObjects[i]
@@ -57,13 +60,13 @@ function love.mousepressed(mx, my, button)
     end
 
     if selectedObject ~= nil then 
-      --selectedObject:clickedOn()
       isDragging = true
     end
   end
 end
  
 function love.mousemoved(mx, my)
+  --update card location to follow mouse pointer
   if selectedObject ~= nil and selectedObject.isFaceUp and isDragging then
     selectedObject:setLocation(mx, my)
   end
@@ -72,9 +75,19 @@ end
 function love.mousereleased(mx,my,button)
   if button == 1 then
     isDragging = false
+    
     if selectedObject ~= nil then
-      selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
-      selectedObject = nil
+      --logic for clicking the submit button
+      if selectedObject.isSubmitButton then
+        print('fortnite')
+        return
+      end
+      
+      --logic for placing a card down
+      if selectedObject ~= nil and selectedObject.isFaceUp then
+        selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
+        selectedObject = nil
+      end
     end
   end
 end
@@ -124,4 +137,8 @@ function screenSetup()
   })
   -- load green background
   background = love.graphics.newImage("assets/img/solitaireBackground.png")
+  
+  --load submit button
+  submitButton = SubmitButton(screenWidth / 10, screenHeight /2)
+  table.insert(drawableObjects, 1, submitButton)
 end
