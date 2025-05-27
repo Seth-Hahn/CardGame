@@ -9,6 +9,7 @@ function PlayLocation:initialize(xPos, yPos, Location)
   for i = 1, 4, 1 do
     self.cards[i] = nil
   end
+  self.emptyRectangles = {}
 end
 
 function PlayLocation:drawToScreen()
@@ -22,8 +23,11 @@ function PlayLocation:drawToScreen()
     if self.cards[i] == nil then
       love.graphics.setColor(0, 0, 0)
       local holderGraphic = love.graphics.rectangle('line', self.x + horizontalOffset, self.y + (70*i), self.width, self.height)
+      table.insert(self.emptyRectangles, 1, holderGraphic)
       love.graphics.setColor(255,255,255)
-    end 
+    else 
+      self.cards[i]:drawToScreen()
+    end
   end
   
   love.graphics.print(self.holderType, self.x , self.y + 325)

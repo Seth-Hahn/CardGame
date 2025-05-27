@@ -85,11 +85,24 @@ function love.mousereleased(mx,my,button)
       
       --logic for placing a card down
       if selectedObject ~= nil and selectedObject.isFaceUp then
-        selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
-        selectedObject = nil
+        
+        --determine which object the card is being placed on
+        for i = 1, #drawableObjects, 1 do
+          if clickOnObject(mx,my, drawableObjects[i]) then
+            if drawableObjects[i] == Player.playLocationOne or --cards must be placed in one of the three play locations
+              drawableObjects[i] == Player.playLocationTwo or
+              drawableObjects[i] == Player.playLocationThree then
+                --put card into selected group
+                selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player)
+            else
+                selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
+            end
+          end
+        end
       end
     end
   end
+  selectedObject = nil 
 end
     
   

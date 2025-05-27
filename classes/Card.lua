@@ -34,6 +34,23 @@ function Card:drawToScreen()
   end
 end
 
+
+function Card:moveFromTo(originalLocation, destination, cardOwner)
+  if destination.holderType == 'Location 1' or destination.holderType == 'Location 2' or destination.holderType == 'Location 3' then
+    if #destination.cards < 4 then --only 4 cards per location
+      for i = #originalLocation.cards, 1, -1 do
+        if originalLocation.cards[i] == self then --find the card in its group and remove it
+          table.remove(originalLocation.cards, i)
+          break
+        end
+      end
+      self:setLocation(destination.x, destination.y)
+      self.currentGroup = destination
+      table.insert(destination.cards, #destination.cards + 1, self)
+    end
+  end
+end
+
 function Card:noEffect()
   return
 end
