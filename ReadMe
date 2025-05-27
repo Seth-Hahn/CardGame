@@ -1,0 +1,30 @@
+Author: Seth Hahn
+--------------------------------------------------------------------
+Programming Patterns:
+
+  -Subclass Sandbox:
+    This was a pattern I moreso attempted to use than actually properly utilizing. I wanted    the CardHolder class to function as the baseclass and have provided operations be overwritten by the derived classes (DrawDeck, CardColumn, Aceholder), but the only operation that gets overwritten anywhere is the drawToScreen function which DrawDeck changes. I attempted to implement the card holders this way because I believed that each different card holding type in Solitaire has connected concepts, but each functions slightly differently and thus could each be built off of a shared class which allows them freedom to make changes as necessary.
+    
+  -Game Loop:
+    I used Love2D's game loop implementation to handle updating game data and rendering cards. Game Loops are a standard practice of Game Design and implementation, thus leading me to use it. 
+    
+--------------------------------------------------------------------
+Postmortem:
+
+
+--------------------------------------------------------------------
+Asset Credits: 
+    - 'middleclass' lua library @ https://github.com/kikito/middleclass
+    - Wooden Cow image by Shevtsovy for Adobe Stock:      https://stock.adobe.com/search?filters%5Bcontent_type%3Aphoto%5D=1&filters%5Bcontent_type%3Aillustration%5D=1&filters%5Bcontent_type%3Azip_vector%5D=1&filters%5Bcontent_type%3Avideo%5D=1&filters%5Bcontent_type%3Atemplate%5D=1&filters%5Bcontent_type%3A3d%5D=1&filters%5Bcontent_type%3Aaudio%5D=0&filters%5Bfetch_excluded_assets%5D=1&filters%5Binclude_stock_enterprise%5D=1&filters%5Bis_editorial%5D=0&filters%5Bfree_collection%5D=0&filters%5Bcontent_type%3Aimage%5D=1&filters%5Bgentech%5D=exclude&k=%22wooden+cow%22&order=relevance&search_type=filter-select&get_facets=1&asset_id=338676421
+    -Pegasus image curtosy of greek myth fandom wiki @ https://greek-myth.fandom.com/wiki/Pegasus
+    -Minotaur image curtosy of Myths and Legends fandom wiki @ https://myths-legends.fandom.com/wiki/Minotaur
+    -Titan image curtosy of greekmythology.com @  https://www.greekmyths-greekmythology.com/the-titans-in-greek-mythology/
+    -Zeus image curtosy of Annina Weber on Artstation @ https://www.artstation.com/artwork/68A6Qn
+    -Medusa image curtosy of greek goddess fandom @ https://greekgoddesses.fandom.com/wiki/Medusa
+    -Artemis image curtosy of greekmythology.com @ https://www.greekmyths-greekmythology.com/artemis-goddess/
+    -Sword of Damocles image curtosy of wikipedia @ https://en.wikipedia.org/wiki/Damocles
+    -Cyclops image curtosy of Villains fandom wiki @ https://villains.fandom.com/wiki/Cyclops_(mythology)
+    -Helios image curtosy of wikipedia @ https://en.wikipedia.org/wiki/Helios
+    - Everything else by me
+    
+--------------------------------------------------------------------
