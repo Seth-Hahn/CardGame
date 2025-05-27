@@ -44,7 +44,9 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
           break
         end
       end
-      self:setLocation(destination.x, destination.y)
+      local newX = destination.emptyRectangleCoords[#destination.emptyRectangleCoords - #destination.cards][1]
+      local newY = destination.emptyRectangleCoords[#destination.emptyRectangleCoords - #destination.cards][2]
+      self:setLocation(newX, newY)
       self.currentGroup = destination
       table.insert(destination.cards, #destination.cards + 1, self)
     end
