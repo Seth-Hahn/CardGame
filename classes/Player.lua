@@ -14,9 +14,9 @@ function Player:initialize(xPos, yPos)
   self.drawDeck = DrawDeck(xPos / 4, yPos + (yPos / 2))
   self.hand = Hand(xPos/ 1.6, yPos + (yPos / 2))
   self.discardPile = DiscardPile(xPos + (xPos * .6) , yPos + (yPos / 2))
-  self.playLocationOne = PlayLocation(xPos / 2, yPos / 1.5, 'Location 1')
-  self.playLocationTwo = PlayLocation(xPos / 1.25, yPos / 1.5, 'Location 2')
-  self.playLocationThree = PlayLocation(xPos / .9, yPos / 1.5, 'Location 3')
+  self.playLocationOne = PlayLocation(xPos / 2, yPos / 1.5, 'Location 1', self)
+  self.playLocationTwo = PlayLocation(xPos / 1.25, yPos / 1.5, 'Location 2', self)
+  self.playLocationThree = PlayLocation(xPos / .9, yPos / 1.5, 'Location 3', self)
   self.mana = 0
   self.points = 0
 end
@@ -94,6 +94,17 @@ function Player:drawToHand(turnNumber)
       cardToHand.isFaceUp = true
       cardToHand.currentGroup = self.hand
     end
+  else 
+    local cardToHand = table.remove(self.drawDeck.cards)
+    table.insert(self.hand.cards, cardToHand)
+    if #self.hand.cards == 1 then
+      newXCoord = self.hand.x
+    else
+      newXCoord = self.hand.cards[#self.hand.cards].x + 70
+    end
+    cardToHand:setLocation(newXCoord, self.hand.y)
+    cardToHand.isFaceUp = true
+    cardToHand.currentGroup = self.hand
   end
       
   

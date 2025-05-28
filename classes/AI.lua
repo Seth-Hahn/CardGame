@@ -6,6 +6,8 @@ local AI = class('AI', Player)
 
 function AI:initialize(xPos, yPos)
   Player.initialize(self, xPos, yPos)
+  
+  self.isAI = true
 end
 
 function AI:drawToScreen()

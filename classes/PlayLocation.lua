@@ -4,9 +4,10 @@ local CardHolder = require 'classes/CardHolder'
 
 PlayLocation = class('PlayLocation', CardHolder)
 
-function PlayLocation:initialize(xPos, yPos, Location)
+function PlayLocation:initialize(xPos, yPos, Location, owner)
   CardHolder.initialize(self, xPos, yPos, Location)
   self.emptyRectangleCoords = {}
+  self.owner = owner
 end
 
 function PlayLocation:drawToScreen()
@@ -27,7 +28,11 @@ function PlayLocation:drawToScreen()
     end
   end
   
-  love.graphics.print(self.holderType, self.x , self.y + 325)
+  if self.owner.isAI ~= true then 
+    love.graphics.print(self.holderType, self.x , self.y + 325)
+    love.graphics.rectangle('line', self.x, self.y, self.width, self.height / 3)
+    love.graphics.print('DRAG HERE TO PLACE', self.x, self.y + (self.y / 10) )
+  end
 end
 
 return PlayLocation

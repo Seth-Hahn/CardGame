@@ -79,7 +79,7 @@ function love.mousereleased(mx,my,button)
     if selectedObject ~= nil then
       --logic for clicking the submit button
       if selectedObject.isSubmitButton then
-        print('fortnite')
+        submitTurn()
         return
       end
       
@@ -94,6 +94,7 @@ function love.mousereleased(mx,my,button)
               drawableObjects[i] == Player.playLocationThree then
                 --put card into selected group
                 selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player)
+                Player.mana = Player.mana - selectedObject.cost
             else
                 selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
             end
@@ -118,6 +119,21 @@ function clickOnObject(mx, my, object)
   my >= object.y and my <= object.y + object.height
 end 
 
+function submitTurn()
+  local playLocationsPlayer = {Player.playLocationOne, Player.playLocationTwo, Player.playLocationThree}
+  --local playLocationsAI = {AI.playLocationOne, AI.playLocationTwo, AI.playLocationThree}
+  
+  --flip player cards face down
+  for i = 1, 3, 1 do
+    local currentLocation = playLocationsPlayer[i].cards
+    for i = 1, #currentLocation, 1 do
+      currentLocation[i].isFaceUp = false
+    end
+  end
+  
+  --ai makes its moves
+  AI.takeTurn(turnNumber)
+end
 function addPlayerCardHoldersToObjectList(player)
   table.insert(drawableObjects, 1, player.drawDeck)
   table.insert(drawableObjects, 1, player.discardPile)
