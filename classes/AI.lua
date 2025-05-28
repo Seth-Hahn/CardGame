@@ -23,4 +23,17 @@ function AI:drawToScreen()
   love.graphics.print("Number of cards in AI hand:" .. #self.hand.cards, self.xPos, self.yPos)
   love.graphics.setFont(standardFont)
 end
+
+function AI:takeTurn(turnNumber)
+  local playLocations = {self.playLocationOne, self.playLocationTwo, self.playLocationThree}
+  local amountOfMoves = turnNumber
+  while amountOfMoves > 0 and #self.hand.cards > 0 do
+    local locationToPlace = playLocations[love.math.random(1,3)] --determine random location to play card
+    local cardToPlace = self.hand.cards[love.math.random(1,#self.hand.cards)] --pick random card to play
+    
+    cardToPlace:moveFromTo(cardToPlace.currentGroup, locationToPlace, self)
+    
+    amountOfMoves = amountOfMoves - 1
+  end
+end
 return AI

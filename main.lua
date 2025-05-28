@@ -9,14 +9,13 @@ require "libraries/middleclass"
 --global variables--
 drawableObjects = {}
 screenWidth, screenHeight = love.window.getDesktopDimensions()
-
+turnNumber = 1
 
 
 
 --love functions--
 function love.load()
   screenSetup()
-  turnNumber = 0
   --seed random number generator for deck shuffle
   math.randomseed(os.time())
   math.random() math.random() math.random() --shuffle the randomizer a few times
@@ -121,7 +120,6 @@ end
 
 function submitTurn()
   local playLocationsPlayer = {Player.playLocationOne, Player.playLocationTwo, Player.playLocationThree}
-  --local playLocationsAI = {AI.playLocationOne, AI.playLocationTwo, AI.playLocationThree}
   
   --flip player cards face down
   for i = 1, 3, 1 do
@@ -132,7 +130,7 @@ function submitTurn()
   end
   
   --ai makes its moves
-  AI.takeTurn(turnNumber)
+  AI:takeTurn(turnNumber)
 end
 function addPlayerCardHoldersToObjectList(player)
   table.insert(drawableObjects, 1, player.drawDeck)

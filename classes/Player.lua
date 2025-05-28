@@ -17,7 +17,7 @@ function Player:initialize(xPos, yPos)
   self.playLocationOne = PlayLocation(xPos / 2, yPos / 1.5, 'Location 1', self)
   self.playLocationTwo = PlayLocation(xPos / 1.25, yPos / 1.5, 'Location 2', self)
   self.playLocationThree = PlayLocation(xPos / .9, yPos / 1.5, 'Location 3', self)
-  self.mana = 0
+  self.mana = 1
   self.points = 0
 end
 
@@ -86,7 +86,7 @@ end
       
 
 function Player:drawToHand(turnNumber)
-  if turnNumber == 0 then --draw 3 cards on first turn
+  if turnNumber == 1 then --draw 3 cards on first turn
     for i = 1, 3, 1 do
       local cardToHand = table.remove(self.drawDeck.cards)
       table.insert(self.hand.cards, 1, cardToHand)
