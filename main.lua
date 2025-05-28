@@ -10,8 +10,8 @@ require "libraries/middleclass"
 drawableObjects = {}
 screenWidth, screenHeight = love.window.getDesktopDimensions()
 turnNumber = 1
-
-
+turnSubmitted = nil
+playedCards = {}
 
 --love functions--
 function love.load()
@@ -40,7 +40,15 @@ function love.draw()
   submitButton:drawToScreen()
 end
 
-function love.update()
+function love.update(dt)
+  if turnSubmitted == true then
+    flipTimer = flipTimer + dt
+    if flipTimer >= flipInterval and flipIndex <= #playedCards then
+      playedCards[flipIndex].isFaceUp = true
+      flipIndex = flipIndex + 1
+      flipTimer = flipTimer - flipInterval
+    end
+  end
 end
   
 function love.mousepressed(mx, my, button)
@@ -94,6 +102,7 @@ function love.mousereleased(mx,my,button)
                 --put card into selected group
                 selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player)
                 Player.mana = Player.mana - selectedObject.cost
+                table.insert(playedCards, selectedObject)
             else
                 selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
             end
@@ -131,6 +140,12 @@ function submitTurn()
   
   --ai makes its moves
   AI:takeTurn(turnNumber)
+  
+  --set submitted turn flag for update function
+  turnSubmitted = true
+  flipTimer = 0
+  flipInterval = 0.6
+  flipIndex = 1
 end
 function addPlayerCardHoldersToObjectList(player)
   table.insert(drawableObjects, 1, player.drawDeck)

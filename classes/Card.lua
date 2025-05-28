@@ -49,6 +49,7 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
       self:setLocation(newX, newY)
       self.currentGroup = destination
       table.insert(destination.cards, #destination.cards + 1, self)
+      destination.totalPower = destination.totalPower + self.power
     end
   end
 end

@@ -8,6 +8,7 @@ function PlayLocation:initialize(xPos, yPos, Location, owner)
   CardHolder.initialize(self, xPos, yPos, Location)
   self.emptyRectangleCoords = {}
   self.owner = owner
+  self.totalPower = 0
 end
 
 function PlayLocation:drawToScreen()
@@ -33,6 +34,7 @@ function PlayLocation:drawToScreen()
     love.graphics.rectangle('line', self.x, self.y, self.width, self.height / 3)
     love.graphics.print('DRAG HERE TO PLACE', self.x, self.y + (self.y / 10) )
   end
+  love.graphics.print("Power:" .. self.totalPower, self.x, self.y + 340)
 end
 
 return PlayLocation

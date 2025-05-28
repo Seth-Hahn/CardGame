@@ -8,6 +8,7 @@ function AI:initialize(xPos, yPos)
   Player.initialize(self, xPos, yPos)
   
   self.isAI = true
+  self.playedCards = {}
 end
 
 function AI:drawToScreen()
@@ -32,8 +33,9 @@ function AI:takeTurn(turnNumber)
     local cardToPlace = self.hand.cards[love.math.random(1,#self.hand.cards)] --pick random card to play
     
     cardToPlace:moveFromTo(cardToPlace.currentGroup, locationToPlace, self)
-    
+    cardToPlace.isFaceUp = false
     amountOfMoves = amountOfMoves - 1
+    table.insert(playedCards, cardToPlace)
   end
 end
 return AI
