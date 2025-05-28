@@ -19,6 +19,8 @@ function Card:initialize(name, cost, power, effectTrigger, effect)
   
   self.isFaceUp = false
   self.currentGroup = nil
+  
+  self.hasBeenFlipped = false
 end
 
 function Card:setLocation(xPos, yPos)

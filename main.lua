@@ -13,6 +13,7 @@ turnNumber = 1
 turnSubmitted = nil
 otherPlayerTurnToFlip = false
 numPlayersWithFlippedCards = 0
+flipInterval = 0.6
 
 --love functions--
 function love.load()
@@ -138,7 +139,9 @@ function submitTurn()
   for i = 1, 3, 1 do
     local currentLocation = playLocationsPlayer[i].cards
     for i = 1, #currentLocation, 1 do
-      currentLocation[i].isFaceUp = false
+      if currentLocation[i].hasBeenFlipped ~= true then 
+        currentLocation[i].isFaceUp = false
+      end
     end
   end
   
@@ -147,9 +150,6 @@ function submitTurn()
   
   --set submitted turn flag for update function
   turnSubmitted = true
-  flipTimer = 0
-  flipInterval = 0.6
-  flipIndex = 1
 end
 function addPlayerCardHoldersToObjectList(player)
   table.insert(drawableObjects, 1, player.drawDeck)
@@ -165,22 +165,25 @@ function addPlayerCardHoldersToObjectList(player)
 end
 
 function flipCards(player, dt)
-  flipTimer = flipTimer + dt
+  player.flipTimer = player.flipTimer + dt
+  
+  if player.flipTimer >= flipInterval and player.flipIndex <= #player.playedCards then
+    local card = player.playedCards[player.flipIndex]
+    card.isFaceUp = true
+    card.hasBeenFlipped = true
+    if card.effectTrigger == "onReveal" then
+      card.effect(card)
+    end
     
-    --flip players cards 
-    if flipTimer >= flipInterval and flipIndex <= #player.playedCards then
-      player.playedCards[flipIndex].isFaceUp = true
-      if player.playedCards[flipIndex].effectTrigger == "onReveal" then
-        player.playedCards[flipIndex].effect(player.playedCards[flipIndex])
-      end
-      flipIndex = flipIndex + 1
-      flipTimer = flipTimer - flipInterval
-    end
-    if flipIndex == #player.playedCards + 1 then
-      flipIndex = 1
-      otherPlayerTurnToFlip = true
-      numPlayersWithFlippedCards = numPlayersWithFlippedCards + 1
-    end
+    player.flipIndex = player.flipIndex + 1
+    player.flipTimer = player.flipTimer - flipInterval
+  end
+  
+  if player.flipIndex == #player.playedCards + 1 then
+    player.flipIndex = 1
+    numPlayersWithFlippedCards = numPlayersWithFlippedCards + 1
+    otherPlayerTurnToFlip = true
+  end
 end
 
 

@@ -20,6 +20,9 @@ function Player:initialize(xPos, yPos)
   self.mana = 1
   self.points = 0
   self.playedCards = {}
+  
+  self.flipIndex = 1
+  self.flipTimer = 0
 end
 
 
