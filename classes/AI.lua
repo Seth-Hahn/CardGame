@@ -8,7 +8,6 @@ function AI:initialize(xPos, yPos)
   Player.initialize(self, xPos, yPos)
   
   self.isAI = true
-  self.playedCards = {}
 end
 
 function AI:drawToScreen()
@@ -35,7 +34,7 @@ function AI:takeTurn(turnNumber)
     cardToPlace:moveFromTo(cardToPlace.currentGroup, locationToPlace, self)
     cardToPlace.isFaceUp = false
     amountOfMoves = amountOfMoves - 1
-    table.insert(playedCards, cardToPlace)
+    table.insert(self.playedCards, cardToPlace)
   end
 end
 return AI

@@ -11,7 +11,8 @@ drawableObjects = {}
 screenWidth, screenHeight = love.window.getDesktopDimensions()
 turnNumber = 1
 turnSubmitted = nil
-playedCards = {}
+otherPlayerTurnToFlip = false
+numPlayersWithFlippedCards = 0
 
 --love functions--
 function love.load()
@@ -42,11 +43,14 @@ end
 
 function love.update(dt)
   if turnSubmitted == true then
-    flipTimer = flipTimer + dt
-    if flipTimer >= flipInterval and flipIndex <= #playedCards then
-      playedCards[flipIndex].isFaceUp = true
-      flipIndex = flipIndex + 1
-      flipTimer = flipTimer - flipInterval
+    flipCards(Player, dt)
+    if otherPlayerTurnToFlip then
+      flipCards(AI, dt)
+    end
+    
+    if numPlayersWithFlippedCards == 2 then
+      numPlayersWithFlippedCards = 0
+      turnSubmitted = false
     end
   end
 end
@@ -102,7 +106,7 @@ function love.mousereleased(mx,my,button)
                 --put card into selected group
                 selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player)
                 Player.mana = Player.mana - selectedObject.cost
-                table.insert(playedCards, selectedObject)
+                table.insert(Player.playedCards, selectedObject)
             else
                 selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
             end
@@ -139,7 +143,7 @@ function submitTurn()
   end
   
   --ai makes its moves
-  AI:takeTurn(turnNumber)
+  AI:takeTurn(turnNumber, playedCards)
   
   --set submitted turn flag for update function
   turnSubmitted = true
@@ -159,6 +163,26 @@ function addPlayerCardHoldersToObjectList(player)
     table.insert(drawableObjects, 1, player.drawDeck.cards[i])
   end
 end
+
+function flipCards(player, dt)
+  flipTimer = flipTimer + dt
+    
+    --flip players cards 
+    if flipTimer >= flipInterval and flipIndex <= #player.playedCards then
+      player.playedCards[flipIndex].isFaceUp = true
+      if player.playedCards[flipIndex].effectTrigger == "onReveal" then
+        player.playedCards[flipIndex].effect(player.playedCards[flipIndex])
+      end
+      flipIndex = flipIndex + 1
+      flipTimer = flipTimer - flipInterval
+    end
+    if flipIndex == #player.playedCards + 1 then
+      flipIndex = 1
+      otherPlayerTurnToFlip = true
+      numPlayersWithFlippedCards = numPlayersWithFlippedCards + 1
+    end
+end
+
 
   
   

@@ -55,10 +55,12 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
 end
 
 function Card:noEffect()
+  print('vanilla')
   return
 end
 
 function Card:zeusEffect()
+  print('deus')
   return
 end
 
@@ -67,6 +69,7 @@ function Card:medusaEffect()
 end
 
 function Card:artemisEffect()
+  print('fartemis')
   return
 end
 
@@ -75,6 +78,7 @@ function Card:swordOfDamoclesEffect()
 end
 
 function Card:cyclopsEffect()
+  print('whyclops')
   return
 end
 

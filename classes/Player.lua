@@ -19,6 +19,7 @@ function Player:initialize(xPos, yPos)
   self.playLocationThree = PlayLocation(xPos / .9, yPos / 1.5, 'Location 3', self)
   self.mana = 1
   self.points = 0
+  self.playedCards = {}
 end
 
 
@@ -57,14 +58,14 @@ function Player:setupDeck()
                       9
                     }
       
-  local cardEffects = {Card:noEffect(), Card:noEffect(), Card:noEffect(),
-                        Card:noEffect(), Card:zeusEffect(), Card:medusaEffect(),
-                        Card:artemisEffect(), Card:swordOfDamoclesEffect(), Card:cyclopsEffect(),
-                        Card:heliosEffect()
+  local cardEffects = {Card.noEffect, Card.noEffect, Card.noEffect,
+                        Card.noEffect, Card.zeusEffect, Card.medusaEffect,
+                        Card.artemisEffect, Card.swordOfDamoclesEffect, Card.cyclopsEffect,
+                        Card.heliosEffect
                       }
   
-  local cardTriggers = {nil, nil, nil, 
-                        nil, 'onReveal', 'onSubmit',
+  local cardTriggers = {'vanilla' , 'vanilla' , 'vanilla', 
+                        'vanilla' , 'onReveal', 'onSubmit',
                         'onReveal', 'onTurnEnd', 'onReveal',
                         'onTurnEnd'
                       }
