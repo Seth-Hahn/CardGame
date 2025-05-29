@@ -45,14 +45,24 @@ end
 function love.update(dt)
   if turnSubmitted == true then
     if otherPlayerTurnToFlip ~= true then
-      flipCards(Player, dt)
+      flipCards(Player, AI, dt)
     else
-      flipCards(AI, dt)
+      flipCards(AI,Player, dt)
     end
     
     if numPlayersWithFlippedCards == 2 then
       numPlayersWithFlippedCards = 0
       turnSubmitted = false
+      turnNumber = turnNumber + 1
+      Player.mana = turnNumber
+      AI.mana = turnNumber
+      otherPlayerTurnToFlip = false
+      
+      for i = 1, #Player.hand.cards, 1 do --put players hand in order of grabbed cards
+        Player.hand.cards[i]:setLocation(Player.hand.x + (i * 70), Player.hand.y)
+      end
+      Player:drawToHand(turnNumber)
+      AI:drawToHand(turnNumber)
     end
   end
 end
@@ -165,14 +175,14 @@ function addPlayerCardHoldersToObjectList(player)
   end
 end
 
-function flipCards(player, dt)
+function flipCards(player,opponent, dt)
   player.flipTimer = player.flipTimer + dt
     
   if player.flipTimer >= flipInterval and player.flipIndex <= #player.playedCards then
     local card = player.playedCards[player.flipIndex]
     card.isFaceUp = true
     if card.effectTrigger == "onReveal" and card.hasBeenFlipped ~= true then
-      card.effect(card, Player, AI)
+      card.effect(card, player, opponent)
     end
     card.hasBeenFlipped = true
     

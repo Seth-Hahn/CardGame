@@ -99,16 +99,18 @@ function Player:drawToHand(turnNumber)
       cardToHand.currentGroup = self.hand
     end
   else 
-    local cardToHand = table.remove(self.drawDeck.cards)
-    table.insert(self.hand.cards, cardToHand)
-    if #self.hand.cards == 1 then
-      newXCoord = self.hand.x
-    else
-      newXCoord = self.hand.cards[#self.hand.cards].x + 70
+    if #self.hand.cards < 7 then -- cannot draw a card if hand is full
+      local cardToHand = table.remove(self.drawDeck.cards)
+      table.insert(self.hand.cards, cardToHand)
+      if #self.hand.cards == 1 then
+        newXCoord = self.hand.x
+      else
+        newXCoord = self.hand.x + #self.hand.cards * 70 
+      end
+      cardToHand:setLocation(newXCoord, self.hand.y)
+      cardToHand.isFaceUp = true
+      cardToHand.currentGroup = self.hand
     end
-    cardToHand:setLocation(newXCoord, self.hand.y)
-    cardToHand.isFaceUp = true
-    cardToHand.currentGroup = self.hand
   end
       
   
