@@ -44,8 +44,9 @@ end
 
 function love.update(dt)
   if turnSubmitted == true then
-    flipCards(Player, dt)
-    if otherPlayerTurnToFlip then
+    if otherPlayerTurnToFlip ~= true then
+      flipCards(Player, dt)
+    else
       flipCards(AI, dt)
     end
     
@@ -166,7 +167,7 @@ end
 
 function flipCards(player, dt)
   player.flipTimer = player.flipTimer + dt
-  
+    
   if player.flipTimer >= flipInterval and player.flipIndex <= #player.playedCards then
     local card = player.playedCards[player.flipIndex]
     card.isFaceUp = true
