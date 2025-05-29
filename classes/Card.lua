@@ -54,6 +54,27 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
       destination.totalPower = destination.totalPower + self.power
     end
   end
+  
+  if destination.holderType == 'DiscardPile' then
+    for i = 4, 1, -1 do
+        if originalLocation.cards[i] == self then --find the card in its group and remove it
+          table.remove(originalLocation.cards, i)
+          break
+        end
+      end
+      
+    if originalLocation.totalPower ~= nil then --remove cards power from its played location
+      originalLocation.totalPower = originalLocation.totalPower - self.power
+    end
+    
+    local newX = destination.x --update location of cards
+    local newY = destination.y
+    self:setLocation(newX,newY)
+    self.currentGroup = destination
+    table.insert(destination.cards, #destination.cards + 1, self)
+  end
+    
+    
 end
 
 function Card:noEffect(player, opponent)
@@ -100,9 +121,21 @@ function Card:swordOfDamoclesEffect(player, opponent)
   return
 end
 
-function Card:cyclopsEffect(player, opponent)
-  print('whyclops')
-  return
+function Card:cyclopsEffect(player, opponent) --discard player's other cards in this location, gain +2 power for each discarded card
+  for i = 4, 1, -1 do
+    local cardToDiscard = self.currentGroup.cards[i]
+    if cardToDiscard ~= self and cardToDiscard ~= nil then
+      cardToDiscard:moveFromTo(cardToDiscard.currentGroup, player.discardPile, player)
+      self.power = self.power + 2
+    end
+  end
+  
+  self.currentGroup.totalPower = self.power 
+    
+  --move cyclops to the top position of its group
+  local newX = self.currentGroup.emptyRectangleCoords[4][1]
+  local newY = self.currentGroup.emptyRectangleCoords[4][2]
+  self:setLocation(newX, newY)
 end
 
 function Card:heliosEffect(player, opponent)

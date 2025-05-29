@@ -22,7 +22,9 @@ function PlayLocation:drawToScreen()
     if self.cards[i] == nil then
       love.graphics.setColor(0, 0, 0)
       local holderGraphic = love.graphics.rectangle('line', self.x + horizontalOffset, self.y + (70*i), self.width, self.height)
-      table.insert(self.emptyRectangleCoords, 1, {self.x + horizontalOffset, self.y + (70*i)} )
+      if #self.emptyRectangleCoords < 4 then 
+        table.insert(self.emptyRectangleCoords, 1, {self.x + horizontalOffset, self.y + (70*i)} )
+      end
       love.graphics.setColor(255,255,255)
     else 
       self.cards[i]:drawToScreen()
