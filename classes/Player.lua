@@ -68,7 +68,7 @@ function Player:setupDeck()
                       }
   
   local cardTriggers = {'vanilla' , 'vanilla' , 'vanilla', 
-                        'vanilla' , 'onReveal', 'onSubmit',
+                        'vanilla' , 'onReveal', 'whileActive',
                         'onReveal', 'onTurnEnd', 'onReveal',
                         'onTurnEnd'
                       }

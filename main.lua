@@ -115,10 +115,12 @@ function love.mousereleased(mx,my,button)
             if drawableObjects[i] == Player.playLocationOne or --cards must be placed in one of the three play locations
               drawableObjects[i] == Player.playLocationTwo or
               drawableObjects[i] == Player.playLocationThree then
-                --put card into selected group
-                selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player)
-                Player.mana = Player.mana - selectedObject.cost
-                table.insert(Player.playedCards, selectedObject)
+                
+                if Player.mana >= selectedObject.cost then --cards only playable when there is enough mana
+                  selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player)
+                  Player.mana = Player.mana - selectedObject.cost
+                  table.insert(Player.playedCards, selectedObject)
+                end
             else
                 selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
             end
