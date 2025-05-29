@@ -170,10 +170,10 @@ function flipCards(player, dt)
   if player.flipTimer >= flipInterval and player.flipIndex <= #player.playedCards then
     local card = player.playedCards[player.flipIndex]
     card.isFaceUp = true
-    card.hasBeenFlipped = true
-    if card.effectTrigger == "onReveal" then
-      card.effect(card)
+    if card.effectTrigger == "onReveal" and card.hasBeenFlipped ~= true then
+      card.effect(card, Player, AI)
     end
+    card.hasBeenFlipped = true
     
     player.flipIndex = player.flipIndex + 1
     player.flipTimer = player.flipTimer - flipInterval

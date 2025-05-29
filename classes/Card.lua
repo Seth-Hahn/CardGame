@@ -56,35 +56,56 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
   end
 end
 
-function Card:noEffect()
+function Card:noEffect(player, opponent)
   print('vanilla')
   return
 end
 
-function Card:zeusEffect()
-  print('deus')
+function Card:zeusEffect(player, opponent) -- -1 power for each card in opponents hand
+  for i = 1, #opponent.hand.cards, 1 do
+    cardToDebuff = opponent.hand.cards[i]
+    cardToDebuff.power = cardToDebuff.power - 1
+  end
   return
 end
 
-function Card:medusaEffect()
+function Card:medusaEffect(player, opponent)
   return
 end
 
-function Card:artemisEffect()
-  print('fartemis')
+function Card:artemisEffect(player, opponent) -- gain +5 power if there is exactly one enemy card in this location
+  local artemisCurrentGroup = self.currentGroup.holderType
+  local playLocationsForOpponent = {opponent.playLocationOne, opponent.playLocationTwo,opponent.playLocationThree}
+  local opposingLocation = nil
+  
+  for i = 1, #playLocationsForOpponent, 1 do
+    if artemisCurrentGroup == playLocationsForOpponent[i].holderType then
+      opposingLocation = playLocationsForOpponent[i]
+      break
+    end
+  end
+  
+  
+  if opposingLocation ~= nil then
+    if #opposingLocation.cards == 1 then
+      self.power = self.power + 5
+      self.currentGroup.totalPower = self.currentGroup.totalPower + 5
+    end
+  end
+  
   return
 end
 
-function Card:swordOfDamoclesEffect()
+function Card:swordOfDamoclesEffect(player, opponent)
   return
 end
 
-function Card:cyclopsEffect()
+function Card:cyclopsEffect(player, opponent)
   print('whyclops')
   return
 end
 
-function Card:heliosEffect()
+function Card:heliosEffect(player, opponent)
   return
 end
 
