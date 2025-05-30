@@ -29,14 +29,17 @@ end
 function AI:takeTurn(turnNumber)
   local playLocations = {self.playLocationOne, self.playLocationTwo, self.playLocationThree}
   local amountOfMoves = turnNumber - 1
+  
   while amountOfMoves > 0 and #self.hand.cards > 0 do
     local locationToPlace = playLocations[love.math.random(1,3)] --determine random location to play card
     local cardToPlace = self.hand.cards[love.math.random(1,#self.hand.cards)] --pick random card to play
-    
-    cardToPlace:moveFromTo(cardToPlace.currentGroup, locationToPlace, self)
-    cardToPlace.isFaceUp = false
-    amountOfMoves = amountOfMoves - 1
-    table.insert(self.playedCards, cardToPlace)
+      
+      if cardToPlace.cost < (1.5*turnNumber) then
+        cardToPlace:moveFromTo(cardToPlace.currentGroup, locationToPlace, self)
+        cardToPlace.isFaceUp = false
+        table.insert(self.playedCards, cardToPlace)
+      end
+      amountOfMoves = amountOfMoves - 1
   end
 end
 return AI
