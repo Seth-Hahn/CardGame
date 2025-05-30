@@ -58,6 +58,24 @@ function love.draw()
 end
 
 function love.update(dt)
+  
+  --handle card effects that run while the card is active
+  --do on turn end effects for any cards which have been played
+  for i = #Player.playedCards, 1, -1 do
+    local cardToCheck = Player.playedCards[i]
+    if cardToCheck.effectTrigger == "whileActive" and cardToCheck.isFaceUp then
+      cardToCheck.effect(cardToCheck, Player, AI)
+    end
+  end
+      
+  for i = #AI.playedCards, 1, -1 do 
+    local cardToCheck = AI.playedCards[i]
+    if cardToCheck.effectTrigger == "whileActive" and cardToCheck.isFaceUp then
+      cardToCheck.effect(cardToCheck, AI, Player)
+    end
+  end
+  
+  
   if turnSubmitted == true then
     local turnWinner,turnWinnerPointsGained, turnLoser, turnLoserPointsGained = determineTurnWinner(Player, AI) 
     if otherPlayerTurnToFlip ~= true then

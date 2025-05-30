@@ -9,6 +9,8 @@ function PlayLocation:initialize(xPos, yPos, Location, owner)
   self.emptyRectangleCoords = {}
   self.owner = owner
   self.totalPower = 0
+  self.debuff = nil
+  self.buff = nil
 end
 
 function PlayLocation:drawToScreen()

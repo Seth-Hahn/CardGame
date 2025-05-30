@@ -49,34 +49,34 @@ function Player:setupDeck()
   local cardNames = { 'minotaur', 'pegasus', 'titan',
                       'woodenCow', 'zeus', 'medusa', 
                       'artemis', 'swordOfDamocles', 'cyclops',
-                      'helios'
+                      'helios', 'nyx'
                     }
-  local cardCosts = {5, 3, 6,
-                      1, 5, 4,
-                      2, 3, 7,
-                      2
+  local cardCosts = {5, 3, 6,  --minotaur, pegasus, titan
+                      1, 5, 1, --woodenCow, zues, medusa
+                      2, 3, 4, --artemis, swordofdamocles, cyclops
+                      2, 3     --helios, nyx
                     }
   local cardPowers = {9, 5, 12,
-                      1, 6, 2,
+                      1, 9, 2,
                       2, 7, 7,
-                      9
+                      9, 5
                     }
       
   local cardEffects = {Card.noEffect, Card.noEffect, Card.noEffect,
                         Card.noEffect, Card.zeusEffect, Card.medusaEffect,
                         Card.artemisEffect, Card.swordOfDamoclesEffect, Card.cyclopsEffect,
-                        Card.heliosEffect
+                        Card.heliosEffect, Card.nyxEffect
                       }
   
   local cardTriggers = {'vanilla' , 'vanilla' , 'vanilla', 
                         'vanilla' , 'onReveal', 'whileActive',
                         'onReveal', 'onTurnEnd', 'onReveal',
-                        'onTurnEnd'
+                        'onTurnEnd', 'onReveal'
                       }
 
                       
   --20 card deck with 2 copies of each card--
-  for i = 1, 10, 1 do
+  for i = 1, #cardNames, 1 do
     for j = 1, 2, 1 do
       local newCard = Card(cardNames[i], cardCosts[i], cardPowers[i], cardTriggers[i], cardEffects[i])
       newCard:setLocation(self.drawDeck.x, self.drawDeck.y - (self.drawDeck.y / 20))

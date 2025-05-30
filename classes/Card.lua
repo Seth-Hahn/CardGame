@@ -7,6 +7,7 @@ function Card:initialize(name, cost, power, effectTrigger, effect)
   self.name = name
   self.cost = cost
   self.power = power
+  self.usualPowerLevel = power
   self.effect = effect
   self.effectTrigger = effectTrigger
   self.front = love.graphics.newImage("assets/img/" .. name .. ".png")
@@ -51,7 +52,13 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
       self:setLocation(newX, newY)
       self.currentGroup = destination
       table.insert(destination.cards, #destination.cards + 1, self)
-      destination.totalPower = destination.totalPower + self.power
+      
+      --apply any location debuffs to cards played
+      if destination.debuff == 'medusa' then
+        destination.totalPower = destination.totalPower + self.power - 1
+      else --standard case AKA no debuffs
+        destination.totalPower = destination.totalPower + self.power
+      end
     end
   end
   
@@ -65,6 +72,9 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
       
     if originalLocation.totalPower ~= nil then --remove cards power from its played location
       originalLocation.totalPower = originalLocation.totalPower - self.power
+      if originalLocation.totalPower < 0 then --location power cannot go negative
+        originalLocation.totalPower = 0
+      end
     end
     
     local newX = destination.x --update location of cards
@@ -90,7 +100,20 @@ function Card:zeusEffect(player, opponent) -- -1 power for each card in opponent
   return
 end
 
-function Card:medusaEffect(player, opponent)
+function Card:medusaEffect(player, opponent) --any card played in Medusa's location recieves -1 to power stat
+  local medusaCurrentGroup = self.currentGroup.holderType
+  local playLocationsForOpponent = {opponent.playLocationOne, opponent.playLocationTwo,opponent.playLocationThree}
+  local opposingLocation = nil
+  
+  for i = 1, #playLocationsForOpponent, 1 do
+    if medusaCurrentGroup == playLocationsForOpponent[i].holderType then
+      opposingLocation = playLocationsForOpponent[i]
+      break
+    end
+  end
+  if opposingLocation ~= nil then 
+    opposingLocation.debuff = "medusa"
+  end
   return
 end
 
@@ -130,7 +153,7 @@ function Card:swordOfDamoclesEffect(player, opponent) -- lose 1 power if not win
   end
   
   if opposingLocation ~= nil then
-    if opposingLocation.totalPower > self.currentGroup.totalPower then
+    if opposingLocation.totalPower >= self.currentGroup.totalPower then
       self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
       self.power = self.power - 1
       self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
@@ -161,6 +184,26 @@ end
 
 function Card:heliosEffect(player, opponent) --discard this card at end of turn
   self:moveFromTo(self.currentGroup, player.discardPile, player)
+  return
+end
+
+function Card:nyxEffect(player, opponent) --discard other cards in this location and add power to this card
+  for i = 4, 1, -1 do
+    local cardToDiscard = self.currentGroup.cards[i]
+    if cardToDiscard ~= self and cardToDiscard ~= nil then
+      cardToDiscard:moveFromTo(cardToDiscard.currentGroup, player.discardPile, player)
+      self.power = self.power + cardToDiscard.power
+    end
+  end
+  
+    self.currentGroup.totalPower = self.power 
+    
+  --move nyx to the top position of its group
+  if self.currentGroup.emptyRectangleCoords ~= nil then
+    local newX = self.currentGroup.emptyRectangleCoords[4][1]
+    local newY = self.currentGroup.emptyRectangleCoords[4][2]
+    self:setLocation(newX, newY)
+  end
   return
 end
 
