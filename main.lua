@@ -14,6 +14,9 @@ turnSubmitted = nil
 otherPlayerTurnToFlip = false
 numPlayersWithFlippedCards = 0
 flipInterval = 0.6
+pointsToWin = 25
+winnerSelected = false
+winner = nil
 
 --love functions--
 function love.load()
@@ -40,6 +43,15 @@ function love.draw()
   Player:drawToScreen()
   AI:drawToScreen()
   submitButton:drawToScreen()
+  
+  if winnerSelected == true and winner ~= nil then
+    local standardFont = love.graphics.getFont()
+    local bigFont = love.graphics.newFont(48)
+    love.graphics.setFont(bigFont)
+    love.graphics.print(winner.tag .. " has Won!", screenWidth / 2, screenHeight / 2)
+    love.graphics.setFont(standardFont)
+  end
+    
 end
 
 function love.update(dt)
@@ -60,6 +72,13 @@ function love.update(dt)
       otherPlayerTurnToFlip = false
       turnWinner.points = turnWinner.points + turnWinnerPointsGained
       turnLoser.points = turnLoser.points + turnLoserPointsGained
+      
+      local GameWinner = determineGameWinner(Player, AI)
+      if GameWinner ~= nil then
+        winnerSelected = true
+        winner = GameWinner
+        
+      end
       
       for i = 1, #Player.hand.cards, 1 do --put players hand in order of grabbed cards
         Player.hand.cards[i]:setLocation(Player.hand.x + (i * 70), Player.hand.y)
@@ -209,8 +228,6 @@ function determineTurnWinner(player, opponent)
   local opponentPlayLocations = {opponent.playLocationOne, opponent.playLocationTwo, opponent.playLocationThree}
   local opponentTotalPower = 0
   
-  local numEqualPowerLocations = 0
-  
   for i = 1, 3, 1 do --iterate through opposing player locations and determine total power of each
     local playerLocation = playerPlayLocations[i]
     local opponentLocation = opponentPlayLocations[i]
@@ -218,15 +235,13 @@ function determineTurnWinner(player, opponent)
       playerTotalPower = playerTotalPower + (playerLocation.totalPower - opponentLocation.totalPower)
     elseif opponentLocation.totalPower > playerLocation.totalPower then
       opponentTotalPower = opponentTotalPower + (opponentLocation.totalPower - playerLocation.totalPower)
-    else 
-      numEqualPowerLocations = numEqualPowerLocations + 1
     end
   end
   if playerTotalPower > opponentTotalPower then --player won the round
     return player, playerTotalPower, opponent, opponentTotalPower
   elseif opponentTotalPower > playerTotalPower then --opponent won the round
     return opponent, opponentTotalPower, player, playerTotalPower
-  elseif numEqualPowerLocations == 3 then --equal power on both sides
+  elseif playerTotalPower == opponentTotalPower then --equal power on both sides
     coinflip = love.math.random(1,2)
     if coinflip == 1 then
       return player, playerTotalPower, opponent, opponentTotalPower
@@ -235,7 +250,33 @@ function determineTurnWinner(player, opponent)
     end
   end
 end
+
+function determineGameWinner(player, opponent)
+  local numWinners = 0 --both players can reach more than the required points on the same turn
+  local winner = nil
   
+  if player.points >= pointsToWin then
+    winner = player
+    numWinners = numWinners + 1
+  end
+  
+  if opponent.points >= pointsToWin then
+    winner = opponent
+    numWinners = numWinners + 1
+  end
+  
+  if numWinners == 2 then --both players reach N points, whoever has more wins
+    if player.points > opponent.points then
+      winner = player
+    else
+      winner = opponent
+    end
+  end
+  
+  return winner
+    
+end
+
   
   
   

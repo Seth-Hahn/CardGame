@@ -23,6 +23,7 @@ function Player:initialize(xPos, yPos)
   
   self.flipIndex = 1
   self.flipTimer = 0
+  self.tag = "Player"
 end
 
 
