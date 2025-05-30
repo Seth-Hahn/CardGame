@@ -44,7 +44,7 @@ end
 
 function love.update(dt)
   if turnSubmitted == true then
-    local turnWinner, turnLoser = determineTurnWinner(Player, AI) 
+    local turnWinner,turnWinnerPointsGained, turnLoser, turnLoserPointsGained = determineTurnWinner(Player, AI) 
     if otherPlayerTurnToFlip ~= true then
       flipCards(turnWinner, turnLoser, dt)
     else
@@ -58,6 +58,8 @@ function love.update(dt)
       Player.mana = turnNumber
       AI.mana = turnNumber
       otherPlayerTurnToFlip = false
+      turnWinner.points = turnWinner.points + turnWinnerPointsGained
+      turnLoser.points = turnLoser.points + turnLoserPointsGained
       
       for i = 1, #Player.hand.cards, 1 do --put players hand in order of grabbed cards
         Player.hand.cards[i]:setLocation(Player.hand.x + (i * 70), Player.hand.y)
@@ -221,15 +223,15 @@ function determineTurnWinner(player, opponent)
     end
   end
   if playerTotalPower > opponentTotalPower then --player won the round
-    return player, opponent
+    return player, playerTotalPower, opponent, opponentTotalPower
   elseif opponentTotalPower > playerTotalPower then --opponent won the round
-    return opponent, player
+    return opponent, opponentTotalPower, player, playerTotalPower
   elseif numEqualPowerLocations == 3 then --equal power on both sides
     coinflip = love.math.random(1,2)
     if coinflip == 1 then
-      return player, opponent
+      return player, playerTotalPower, opponent, opponentTotalPower
     else
-      return opponent, player
+      return opponent, opponentTotalPower, player, playerTotalPower
     end
   end
 end
