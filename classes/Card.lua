@@ -118,6 +118,7 @@ function Card:artemisEffect(player, opponent) -- gain +5 power if there is exact
 end
 
 function Card:swordOfDamoclesEffect(player, opponent)
+  print("swords")
   return
 end
 
@@ -138,7 +139,8 @@ function Card:cyclopsEffect(player, opponent) --discard player's other cards in 
   self:setLocation(newX, newY)
 end
 
-function Card:heliosEffect(player, opponent)
+function Card:heliosEffect(player, opponent) --discard this card at end of turn
+  self:moveFromTo(self.currentGroup, player.discardPile, player)
   return
 end
 

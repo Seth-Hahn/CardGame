@@ -66,7 +66,7 @@ function love.update(dt)
       flipCards(turnLoser,turnWinner, dt)
     end
     
-    if numPlayersWithFlippedCards == 2 then
+    if numPlayersWithFlippedCards == 2 then --turn end
       numPlayersWithFlippedCards = 0
       turnSubmitted = false
       turnNumber = turnNumber + 1
@@ -75,6 +75,21 @@ function love.update(dt)
       otherPlayerTurnToFlip = false
       turnWinner.points = turnWinner.points + turnWinnerPointsGained
       turnLoser.points = turnLoser.points + turnLoserPointsGained
+      
+      --do on turn end effects for any cards which have been played
+      for i = #Player.playedCards, 1, -1 do
+        local cardToCheck = Player.playedCards[i]
+        if cardToCheck.effectTrigger == "onTurnEnd" then
+          cardToCheck.effect(cardToCheck, Player, AI)
+        end
+      end
+      
+      for i = #AI.playedCards, 1, -1 do 
+        local cardToCheck = AI.playedCards[i]
+        if cardToCheck.effectTrigger == "onTurnEnd" then
+          cardToCheck.effect(cardToCheck, AI, Player)
+        end
+      end
       
       local GameWinner = determineGameWinner(Player, AI)
       if GameWinner ~= nil then
