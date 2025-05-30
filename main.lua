@@ -1,9 +1,11 @@
 local CardHolder = require "classes/CardHolder"
-local Player = require "classes/Player"
-local AI = require "classes/AI"
+local PlayerClass = require "classes/Player"
+local AIClass = require "classes/AI"
 local Card = require "classes/Card"
 local SubmitButton = require "classes/SubmitButton"
+local ResetButton = require "classes/resetButton"
 require "libraries/middleclass"
+
 
 
 --global variables--
@@ -26,12 +28,12 @@ function love.load()
   math.random() math.random() math.random() --shuffle the randomizer a few times
   
   --initialize AI and player decks--
-  Player = Player(screenWidth / 2, screenHeight / 2)
+  Player = PlayerClass(screenWidth / 2, screenHeight / 2)
   Player:setupDeck()
   addPlayerCardHoldersToObjectList(Player)
   Player:drawToHand(turnNumber)
   
-  AI = AI(screenWidth / 2, screenHeight / 100)
+  AI = AIClass(screenWidth / 2, screenHeight / 100)
   AI:setupDeck()
   addPlayerCardHoldersToObjectList(AI)
   AI:drawToHand(turnNumber)
@@ -43,6 +45,7 @@ function love.draw()
   Player:drawToScreen()
   AI:drawToScreen()
   submitButton:drawToScreen()
+  resetButton:drawToScreen()
   
   if winnerSelected == true and winner ~= nil then
     local standardFont = love.graphics.getFont()
@@ -125,6 +128,10 @@ function love.mousereleased(mx,my,button)
       --logic for clicking the submit button
       if selectedObject.isSubmitButton then
         submitTurn()
+        return
+      end
+      if selectedObject.isResetButton then
+        resetGame()
         return
       end
       
@@ -277,6 +284,26 @@ function determineGameWinner(player, opponent)
     
 end
 
+function resetGame()
+  --reset all global variables then call load
+  drawableObjects = {}
+  screenWidth, screenHeight = love.window.getDesktopDimensions()
+  turnNumber = 1
+  turnSubmitted = nil
+  otherPlayerTurnToFlip = false
+  numPlayersWithFlippedCards = 0
+  flipInterval = 0.6
+  pointsToWin = 25
+  winnerSelected = false
+  winner = nil
+  
+  --reset player and AI
+  
+  
+  love.load()
+  return
+end
+
   
   
   
@@ -299,4 +326,8 @@ function screenSetup()
   --load submit button
   submitButton = SubmitButton(screenWidth / 10, screenHeight /2)
   table.insert(drawableObjects, 1, submitButton)
+  
+  --load Reset Button
+  resetButton = ResetButton(screenWidth / 10, screenHeight / 4)
+  table.insert(drawableObjects, 1, resetButton)
 end

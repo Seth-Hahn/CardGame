@@ -43,8 +43,8 @@ function AI:takeTurn(turnNumber)
       end
       amountOfMoves = amountOfMoves - 1
       
-    local coinFlip = love.math.random(0,1) --randomly determines if the ai will play another card
-    if coinFlip == 0 then
+    local coinFlip = love.math.random(0,100) --randomly determines if the ai will play another card
+    if coinFlip <= 33 then
       playAnotherCard = false
     end
   end
