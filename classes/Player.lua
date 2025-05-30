@@ -40,7 +40,7 @@ function Player:drawToScreen()
   local currentManafont = love.graphics.newFont(24)
   love.graphics.setFont(currentManafont)
   love.graphics.print("Current Mana:" .. self.mana, self.xPos, self.yPos + (self.yPos * .8) )
-  love.graphics.print("Points:" .. self.points .. "/15", self.xPos + (self.xPos *.8) , self.yPos + (self.yPos * .8) )
+  love.graphics.print("Points:" .. self.points .. "/25", self.xPos + (self.xPos *.8) , self.yPos + (self.yPos * .8) )
   love.graphics.setFont(standardFont)
 end
 

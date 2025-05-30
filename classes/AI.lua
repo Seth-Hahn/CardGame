@@ -21,12 +21,14 @@ function AI:drawToScreen()
   local aiHandSizeFont = love.graphics.newFont(24)
   love.graphics.setFont(aiHandSizeFont)
   love.graphics.print("Number of cards in AI hand:" .. #self.hand.cards, self.xPos, self.yPos)
+  love.graphics.print("Points:" .. self.points .. "/25", self.xPos + (self.xPos *.8) , self.yPos + (self.yPos * .8) )
   love.graphics.setFont(standardFont)
+  
 end
 
 function AI:takeTurn(turnNumber)
   local playLocations = {self.playLocationOne, self.playLocationTwo, self.playLocationThree}
-  local amountOfMoves = turnNumber
+  local amountOfMoves = turnNumber - 1
   while amountOfMoves > 0 and #self.hand.cards > 0 do
     local locationToPlace = playLocations[love.math.random(1,3)] --determine random location to play card
     local cardToPlace = self.hand.cards[love.math.random(1,#self.hand.cards)] --pick random card to play

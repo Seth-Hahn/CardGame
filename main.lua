@@ -44,10 +44,11 @@ end
 
 function love.update(dt)
   if turnSubmitted == true then
+    local turnWinner, turnLoser = determineTurnWinner(Player, AI) 
     if otherPlayerTurnToFlip ~= true then
-      flipCards(Player, AI, dt)
+      flipCards(turnWinner, turnLoser, dt)
     else
-      flipCards(AI,Player, dt)
+      flipCards(turnLoser,turnWinner, dt)
     end
     
     if numPlayersWithFlippedCards == 2 then
@@ -199,7 +200,39 @@ function flipCards(player,opponent, dt)
   end
 end
 
-
+function determineTurnWinner(player, opponent)
+  local playerPlayLocations = {player.playLocationOne, player.playLocationTwo, player.playLocationThree}
+  local playerTotalPower = 0
+  
+  local opponentPlayLocations = {opponent.playLocationOne, opponent.playLocationTwo, opponent.playLocationThree}
+  local opponentTotalPower = 0
+  
+  local numEqualPowerLocations = 0
+  
+  for i = 1, 3, 1 do --iterate through opposing player locations and determine total power of each
+    local playerLocation = playerPlayLocations[i]
+    local opponentLocation = opponentPlayLocations[i]
+    if playerLocation.totalPower > opponentLocation.totalPower then --player has more power at a location, give them the mana
+      playerTotalPower = playerTotalPower + (playerLocation.totalPower - opponentLocation.totalPower)
+    elseif opponentLocation.totalPower > playerLocation.totalPower then
+      opponentTotalPower = opponentTotalPower + (opponentLocation.totalPower - playerLocation.totalPower)
+    else 
+      numEqualPowerLocations = numEqualPowerLocations + 1
+    end
+  end
+  if playerTotalPower > opponentTotalPower then --player won the round
+    return player, opponent
+  elseif opponentTotalPower > playerTotalPower then --opponent won the round
+    return opponent, player
+  elseif numEqualPowerLocations == 3 then --equal power on both sides
+    coinflip = love.math.random(1,2)
+    if coinflip == 1 then
+      return player, opponent
+    else
+      return opponent, player
+    end
+  end
+end
   
   
   
