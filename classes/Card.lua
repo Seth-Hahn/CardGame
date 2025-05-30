@@ -117,8 +117,26 @@ function Card:artemisEffect(player, opponent) -- gain +5 power if there is exact
   return
 end
 
-function Card:swordOfDamoclesEffect(player, opponent)
-  print("swords")
+function Card:swordOfDamoclesEffect(player, opponent) -- lose 1 power if not winning this location
+  local damoclesCurrentGroup = self.currentGroup.holderType
+  local playLocationsForOpponent = {opponent.playLocationOne, opponent.playLocationTwo,opponent.playLocationThree}
+  local opposingLocation = nil
+  
+  for i = 1, #playLocationsForOpponent, 1 do
+    if damoclesCurrentGroup == playLocationsForOpponent[i].holderType then
+      opposingLocation = playLocationsForOpponent[i]
+      break
+    end
+  end
+  
+  if opposingLocation ~= nil then
+    if opposingLocation.totalPower > self.currentGroup.totalPower then
+      self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
+      self.power = self.power - 1
+      self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+    end
+  end
+  
   return
 end
 
@@ -134,9 +152,11 @@ function Card:cyclopsEffect(player, opponent) --discard player's other cards in 
   self.currentGroup.totalPower = self.power 
     
   --move cyclops to the top position of its group
-  local newX = self.currentGroup.emptyRectangleCoords[4][1]
-  local newY = self.currentGroup.emptyRectangleCoords[4][2]
-  self:setLocation(newX, newY)
+  if self.currentGroup.emptyRectangleCoords ~= nil then
+    local newX = self.currentGroup.emptyRectangleCoords[4][1]
+    local newY = self.currentGroup.emptyRectangleCoords[4][2]
+    self:setLocation(newX, newY)
+  end
 end
 
 function Card:heliosEffect(player, opponent) --discard this card at end of turn
