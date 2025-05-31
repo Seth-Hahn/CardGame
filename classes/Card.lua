@@ -207,5 +207,14 @@ function Card:nyxEffect(player, opponent) --discard other cards in this location
   return
 end
 
+function Card:icarusEffect(player, opponent) --gain +1 power end of turn; discard when power is greater than 7
+  self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
+  self.power = self.power + 1
+  self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+  if self.power > 7 then
+    self:moveFromTo(self.currentGroup, player.discardPile, player)
+  end
+end
+
 return Card
   

@@ -49,29 +49,29 @@ function Player:setupDeck()
   local cardNames = { 'minotaur', 'pegasus', 'titan',
                       'woodenCow', 'zeus', 'medusa', 
                       'artemis', 'swordOfDamocles', 'cyclops',
-                      'helios', 'nyx'
+                      'helios', 'nyx', 'icarus'
                     }
   local cardCosts = {5, 3, 6,  --minotaur, pegasus, titan
                       1, 5, 1, --woodenCow, zues, medusa
                       2, 3, 4, --artemis, swordofdamocles, cyclops
-                      2, 3     --helios, nyx
+                      2, 3, 1  --helios, nyx, icarus
                     }
   local cardPowers = {9, 5, 12,
                       1, 9, 2,
                       2, 7, 7,
-                      9, 5
+                      9, 5, 1
                     }
       
   local cardEffects = {Card.noEffect, Card.noEffect, Card.noEffect,
                         Card.noEffect, Card.zeusEffect, Card.medusaEffect,
                         Card.artemisEffect, Card.swordOfDamoclesEffect, Card.cyclopsEffect,
-                        Card.heliosEffect, Card.nyxEffect
+                        Card.heliosEffect, Card.nyxEffect, Card.icarusEffect
                       }
   
   local cardTriggers = {'vanilla' , 'vanilla' , 'vanilla', 
                         'vanilla' , 'onReveal', 'whileActive',
                         'onReveal', 'onTurnEnd', 'onReveal',
-                        'onTurnEnd', 'onReveal'
+                        'onTurnEnd', 'onReveal', 'onTurnEnd'
                       }
 
                       
