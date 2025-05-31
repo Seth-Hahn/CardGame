@@ -246,7 +246,11 @@ end
 
 function flipCards(player,opponent, dt)
   player.flipTimer = player.flipTimer + dt
-    
+  
+  if player.flipIndex <= #player.playedCards and player.playedCards[player.flipIndex].isFaceUp then --dont wait for cards which have already been flipped
+    player.flipTimer = flipInterval
+  end
+  
   if player.flipTimer >= flipInterval and player.flipIndex <= #player.playedCards then
     local card = player.playedCards[player.flipIndex]
     card.isFaceUp = true
