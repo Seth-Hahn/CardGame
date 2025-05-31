@@ -32,11 +32,16 @@ function love.load()
   Player:setupDeck()
   addPlayerCardHoldersToObjectList(Player)
   Player:drawToHand(turnNumber)
+  Player.referenceToGameObjectList = drawableObjects
   
   AI = AIClass(screenWidth / 2, screenHeight / 100)
   AI:setupDeck()
   addPlayerCardHoldersToObjectList(AI)
   AI:drawToHand(turnNumber)
+  
+  --set Player and AI as opponents
+  Player.opposingPlayer = AI
+  AI.opposingPlayer = Player
   
 end
 

@@ -82,6 +82,10 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
     self:setLocation(newX,newY)
     self.currentGroup = destination
     table.insert(destination.cards, #destination.cards + 1, self)
+    
+    if self.effectTrigger == "onDiscard" then
+      self.effect(self, cardOwner, cardOwner.opposingPlayer)
+    end
   end
     
     
@@ -208,12 +212,26 @@ function Card:nyxEffect(player, opponent) --discard other cards in this location
 end
 
 function Card:icarusEffect(player, opponent) --gain +1 power end of turn; discard when power is greater than 7
-  self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
-  self.power = self.power + 1
-  self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+  if self.currentGroup.totalPower ~= nil then 
+    self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
+    self.power = self.power + 1
+    self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+  end
   if self.power > 7 then
     self:moveFromTo(self.currentGroup, player.discardPile, player)
   end
+end
+
+function Card:hydraEffect(player, opponent) --add two copies to your hand when this card is discarded
+  for i = 1, 2, 1 do
+    local newHydra = Card('hydra', 1,3,'onDiscard', self.effect)
+    if #player.hand.cards < 7 then
+      table.insert(player.referenceToGameObjectList, newHydra)
+      table.insert(player.drawDeck.cards, newHydra)
+      player:drawToHand()
+    end
+  end
+
 end
 
 return Card
