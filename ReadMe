@@ -3,14 +3,14 @@ Author: Seth Hahn
 Programming Patterns:
 
   -Subclass Sandbox:
-    This was a pattern I moreso attempted to use than actually properly utilizing. I wanted    the CardHolder class to function as the baseclass and have provided operations be overwritten by the derived classes (DrawDeck, CardColumn, Aceholder), but the only operation that gets overwritten anywhere is the drawToScreen function which DrawDeck changes. I attempted to implement the card holders this way because I believed that each different card holding type in Solitaire has connected concepts, but each functions slightly differently and thus could each be built off of a shared class which allows them freedom to make changes as necessary.
+    The CardHolder class functions as the baseclass and provides the subclasses (discard pile, drawdeck, etc) with similar initializations and the ability for them to draw to the screen, though there are some other cardHolders which override the drawToScreen function. I attempted to implement the card holders this way because I believed that each different card holding area has connected concepts, but each functions slightly differently and thus could each be built off of a shared class which allows them freedom to make changes as necessary.
     
   -Game Loop:
-    I used Love2D's game loop implementation to handle updating game data and rendering cards. Game Loops are a standard practice of Game Design and implementation, thus leading me to use it. 
+    I used Love2D's game loop implementation to handle updating game data after the player submits a turn and for rendering cards. Game Loops are a standard practice of Game Design and implementation, thus leading me to use it. 
     
 --------------------------------------------------------------------
 Postmortem:
-
+  I think I did a good job at seperating the code out between classes and not overlapping too many areas of code so that everything stays self contained. A lot of bugs in the later stages of development ended up being relatively quick fixes due to the structure of my code. I would like to flesh out the card effects more and create a more stable version of certain effect triggers (specifically the while active trigger that medusa uses). I think that that is an area where bugs are most likely to occur, especially when scaled up with more cards, so streamlining that would be helpful.  
 
 --------------------------------------------------------------------
 Asset Credits: 
