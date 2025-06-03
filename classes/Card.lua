@@ -231,8 +231,22 @@ function Card:hydraEffect(player, opponent) --add two copies to your hand when t
       player:drawToHand()
     end
   end
-
 end
 
+function Card:herculesEffect(player, opponent) --double power if this is the strongest card within player location
+  for i = 4, 1, -1 do
+    local cardToCheck = self.currentGroup.cards[i] --check each card in this location's power
+    if cardToCheck ~= self and cardToCheck ~= nil then
+      if cardToCheck.power > self.power then --if any card is stronger, than do nothing
+        return
+      end
+    end
+  end
+  
+  self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
+  self.power = self.power * 2
+  self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+  return 
+end
 return Card
   

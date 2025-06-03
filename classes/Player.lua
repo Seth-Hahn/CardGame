@@ -52,33 +52,33 @@ function Player:setupDeck()
                       'woodenCow', 'zeus', 'medusa', 
                       'artemis', 'swordOfDamocles', 'cyclops',
                       'helios', 'nyx', 'icarus',
-                      'hydra' 
+                      'hydra', 'hercules' 
                     }
   local cardCosts = {5, 3, 6,  --minotaur, pegasus, titan
                       1, 5, 1, --woodenCow, zues, medusa
                       2, 3, 4, --artemis, swordofdamocles, cyclops
                       2, 3, 1,  --helios, nyx, icarus
-                      1,       --hydra
+                      1, 2,     --hydra, hercules
                     }
   local cardPowers = {9, 5, 12,
                       1, 9, 2,
                       2, 7, 7,
                       9, 5, 1,
-                      3, 
+                      3, 4,
                     }
       
   local cardEffects = {Card.noEffect, Card.noEffect, Card.noEffect,
                         Card.noEffect, Card.zeusEffect, Card.medusaEffect,
                         Card.artemisEffect, Card.swordOfDamoclesEffect, Card.cyclopsEffect,
                         Card.heliosEffect, Card.nyxEffect, Card.icarusEffect,
-                        Card.hydraEffect
+                        Card.hydraEffect, Card.herculesEffect
                       }
   
   local cardTriggers = {'vanilla' , 'vanilla' , 'vanilla', 
                         'vanilla' , 'onReveal', 'whileActive',
                         'onReveal', 'onTurnEnd', 'onReveal',
                         'onTurnEnd', 'onReveal', 'onTurnEnd',
-                        'onDiscard'
+                        'onDiscard', 'onReveal'
                       }
 
                       
