@@ -110,6 +110,7 @@ function Card:moveFromTo(originalLocation, destination, cardOwner, turnNumber)
     self:setLocation(newXCoord, destination.y)
     self.isFaceUp = true
     self.currentGroup = destination
+    destination:updateCardPositions()
   end
     
     

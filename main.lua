@@ -70,7 +70,6 @@ function love.draw()
 end
 
 function love.update(dt)
-  
   --handle card effects that run while the card is active
   --do on turn end effects for any cards which have been played
   for i = #Player.playedCards, 1, -1 do

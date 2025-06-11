@@ -26,4 +26,11 @@ function Hand:drawToScreen()
   love.graphics.print(self.holderType, self.x, self.y + 100)
 end
 
+function Hand:updateCardPositions()
+  for i = 1, #self.cards, 1 do
+    local card = self.cards[i]
+    card:setLocation(self.x + (70 * i), self.y)
+  end
+end
+
 return Hand
