@@ -10,7 +10,9 @@ function PlayLocation:initialize(xPos, yPos, Location, owner)
   self.owner = owner
   self.totalPower = 0
   self.debuff = nil
+  self.debuffer = nil
   self.buff = nil
+  self.buffer = nil
 end
 
 function PlayLocation:drawToScreen()

@@ -54,8 +54,9 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
       table.insert(destination.cards, #destination.cards + 1, self)
       
       --apply any location debuffs to cards played
-      if destination.debuff == 'medusa' then
-        destination.totalPower = destination.totalPower + self.power - 1
+      if destination.debuff == 'medusa' and destination.debuffer.currentGroup.holderType ~= "DiscardPile" then
+        self.power = self.power - 1
+        destination.totalPower = destination.totalPower + self.power
       else --standard case AKA no debuffs
         destination.totalPower = destination.totalPower + self.power
       end
@@ -117,6 +118,7 @@ function Card:medusaEffect(player, opponent) --any card played in Medusa's locat
   end
   if opposingLocation ~= nil then 
     opposingLocation.debuff = "medusa"
+    opposingLocation.debuffer = self
   end
   return
 end
