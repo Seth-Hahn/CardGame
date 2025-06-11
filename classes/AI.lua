@@ -4,11 +4,12 @@ local Player = require "classes/Player"
 local class = require 'libraries/middleclass'
 local AI = class('AI', Player)
 
-function AI:initialize(xPos, yPos)
+function AI:initialize(xPos, yPos, difficultyLevel)
   Player.initialize(self, xPos, yPos)
   
   self.isAI = true
   self.tag = "AI"
+  self.difficulty = difficultyLevel
 end
 
 function AI:drawToScreen()
@@ -23,6 +24,7 @@ function AI:drawToScreen()
   love.graphics.setFont(aiHandSizeFont)
   love.graphics.print("Number of cards in AI hand:" .. #self.hand.cards, self.xPos, self.yPos)
   love.graphics.print("Points:" .. self.points .. "/25", self.xPos + (self.xPos *.8) , self.yPos + (self.yPos * .8) )
+  love.graphics.print("Difficulty:" .. self.difficulty, self.xPos + (self.xPos *.8) , self.yPos + (self.yPos / .2) )
   love.graphics.setFont(standardFont)
   
 end

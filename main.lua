@@ -4,6 +4,7 @@ local AIClass = require "classes/AI"
 local Card = require "classes/Card"
 local SubmitButton = require "classes/SubmitButton"
 local ResetButton = require "classes/resetButton"
+local DifficultyButton = require "classes/DifficultyButton"
 require "libraries/middleclass"
 
 
@@ -19,6 +20,7 @@ flipInterval = 0.6
 pointsToWin = 25
 winnerSelected = false
 winner = nil
+difficultyLevel = 1
 
 --love functions--
 function love.load()
@@ -34,7 +36,7 @@ function love.load()
   Player:drawToHand(turnNumber)
   Player.referenceToGameObjectList = drawableObjects
   
-  AI = AIClass(screenWidth / 2, screenHeight / 100)
+  AI = AIClass(screenWidth / 2, screenHeight / 100, difficultyLevel)
   AI:setupDeck()
   addPlayerCardHoldersToObjectList(AI)
   AI:drawToHand(turnNumber)
@@ -51,6 +53,9 @@ function love.draw()
   AI:drawToScreen()
   submitButton:drawToScreen()
   resetButton:drawToScreen()
+  easyButton:drawToScreen()
+  mediumButton:drawToScreen()
+  hardButton:drawToScreen()
   
   if winnerSelected == true and winner ~= nil then
     local standardFont = love.graphics.getFont()
@@ -170,6 +175,10 @@ function love.mousereleased(mx,my,button)
       end
       if selectedObject.isResetButton then
         resetGame()
+        return
+      end
+      if selectedObject.isDifficultyButton then
+        AI.difficulty = selectedObject.difficultyLevel
         return
       end
       
@@ -372,4 +381,12 @@ function screenSetup()
   --load Reset Button
   resetButton = ResetButton(screenWidth / 10, screenHeight / 4)
   table.insert(drawableObjects, 1, resetButton)
+  
+  --load difficulty buttons
+  easyButton = DifficultyButton(screenWidth * .9 , screenHeight * .2, "easyButton", 1)
+  table.insert(drawableObjects, 1, easyButton)
+  mediumButton = DifficultyButton(screenWidth * .9, screenHeight * .3, "mediumButton", 2)
+  table.insert(drawableObjects, 1, mediumButton)
+  hardButton = DifficultyButton(screenWidth * .9, screenHeight * .4, "hardButton", 3)
+  table.insert(drawableObjects, 1, hardButton)
 end
