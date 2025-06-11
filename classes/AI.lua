@@ -33,12 +33,25 @@ function AI:takeTurn(turnNumber)
   local playLocations = {self.playLocationOne, self.playLocationTwo, self.playLocationThree}
   local amountOfMoves = turnNumber - 1
   local playAnotherCard = true
+  local chanceToStopPlayingCards = 0
+  local manaCapMultiplier = 1
+  
+  if self.difficulty == 1 then --difficulty settings
+    chanceToStopPlayingCards = 60
+    manaCapMultiplier = 1.1
+  elseif self.difficulty == 2 then
+    chanceToStopPlayingCards = 50
+    manaCapMultiplier = 1.5
+  elseif self.difficulty == 3 then
+    chanceToStopPlayingCards = 25
+    manaCapMultiplier = 2.5 
+  end
   
   while amountOfMoves > 0 and #self.hand.cards > 0 and playAnotherCard do
     local locationToPlace = playLocations[love.math.random(1,3)] --determine random location to play card
     local cardToPlace = self.hand.cards[love.math.random(1,#self.hand.cards)] --pick random card to play
       
-      if cardToPlace.cost < (1.5*turnNumber) then
+      if cardToPlace.cost < (manaCapMultiplier*turnNumber) then
         cardToPlace:moveFromTo(cardToPlace.currentGroup, locationToPlace, self)
         cardToPlace.isFaceUp = false
         table.insert(self.playedCards, cardToPlace)
@@ -46,9 +59,12 @@ function AI:takeTurn(turnNumber)
       amountOfMoves = amountOfMoves - 1
       
     local coinFlip = love.math.random(0,100) --randomly determines if the ai will play another card
-    if coinFlip <= 33 then
+    if coinFlip <= chanceToStopPlayingCards then
       playAnotherCard = false
     end
   end
 end
+
 return AI
+
+
