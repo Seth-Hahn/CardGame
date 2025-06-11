@@ -30,7 +30,6 @@ function CardHolder:drawToScreen()
 end
 
 function CardHolder:clickedOn()
-  print(self.holderType)
 end
 return CardHolder
 

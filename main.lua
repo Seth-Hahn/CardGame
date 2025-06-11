@@ -5,6 +5,7 @@ local Card = require "classes/Card"
 local SubmitButton = require "classes/SubmitButton"
 local ResetButton = require "classes/resetButton"
 local DifficultyButton = require "classes/DifficultyButton"
+local UndoButton = require "classes/UndoButton"
 require "libraries/middleclass"
 
 
@@ -56,6 +57,7 @@ function love.draw()
   easyButton:drawToScreen()
   mediumButton:drawToScreen()
   hardButton:drawToScreen()
+  undoButton:drawToScreen()
   
   if winnerSelected == true and winner ~= nil then
     local standardFont = love.graphics.getFont()
@@ -181,6 +183,10 @@ function love.mousereleased(mx,my,button)
         AI.difficulty = selectedObject.difficultyLevel
         return
       end
+      if selectedObject.isUndoButton then
+        undoStage()
+        return
+      end
       
       --logic for placing a card down
       if selectedObject ~= nil and selectedObject.isFaceUp then
@@ -193,7 +199,7 @@ function love.mousereleased(mx,my,button)
               drawableObjects[i] == Player.playLocationThree then
                 
                 if Player.mana >= selectedObject.cost then --cards only playable when there is enough mana
-                  selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player)
+                  selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player, turnNumber)
                   Player.mana = Player.mana - selectedObject.cost
                   table.insert(Player.playedCards, selectedObject)
                 end
@@ -221,6 +227,18 @@ function clickOnObject(mx, my, object)
   my >= object.y and my <= object.y + object.height
 end 
 
+function undoStage() --go through each holder and put cards which were just placed back into the hand
+  local playLocationsPlayer = {Player.playLocationOne, Player.playLocationTwo, Player.playLocationThree}
+  for i = 1, 3, 1 do
+    local currentLocation = playLocationsPlayer[i].cards
+    for i = #currentLocation, 1, -1 do
+      local card = currentLocation[i]
+      if card.turnPlayed == turnNumber then
+        card:moveFromTo(card.currentGroup, Player.hand, Player, turnNumber)
+      end
+    end
+  end
+end
 function submitTurn()
   local playLocationsPlayer = {Player.playLocationOne, Player.playLocationTwo, Player.playLocationThree}
   
@@ -389,4 +407,6 @@ function screenSetup()
   table.insert(drawableObjects, 1, mediumButton)
   hardButton = DifficultyButton(screenWidth * .9, screenHeight * .4, "hardButton", 3)
   table.insert(drawableObjects, 1, hardButton)
+  undoButton = UndoButton(screenWidth * .2, screenHeight  *.8)
+  table.insert(drawableObjects, 1, undoButton)
 end

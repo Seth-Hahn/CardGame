@@ -12,6 +12,7 @@ function Card:initialize(name, cost, power, effectTrigger, effect)
   self.effectTrigger = effectTrigger
   self.front = love.graphics.newImage("assets/img/" .. name .. ".png")
   self.back = love.graphics.newImage("assets/img/cardBack.png")
+  self.turnPlayed = -1
   
   self.x = nil
   self.y = nil
@@ -38,7 +39,7 @@ function Card:drawToScreen()
 end
 
 
-function Card:moveFromTo(originalLocation, destination, cardOwner)
+function Card:moveFromTo(originalLocation, destination, cardOwner, turnNumber)
   if destination.holderType == 'Location 1' or destination.holderType == 'Location 2' or destination.holderType == 'Location 3' then
     if #destination.cards < 4 then --only 4 cards per location
       for i = #originalLocation.cards, 1, -1 do
@@ -52,6 +53,7 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
       self:setLocation(newX, newY)
       self.currentGroup = destination
       table.insert(destination.cards, #destination.cards + 1, self)
+      self.turnPlayed = turnNumber
       
       --apply any location debuffs to cards played
       if destination.debuff == 'medusa' and destination.debuffer.currentGroup.holderType ~= "DiscardPile" then
@@ -87,6 +89,27 @@ function Card:moveFromTo(originalLocation, destination, cardOwner)
     if self.effectTrigger == "onDiscard" then
       self.effect(self, cardOwner, cardOwner.opposingPlayer)
     end
+  end
+  
+  if destination.holderType == "Hand" then
+    for i = 4, 1, -1 do
+      if originalLocation.cards[i] == self then --find the card in its group and remove it
+        table.remove(originalLocation.cards, i)
+        originalLocation.totalPower = originalLocation.totalPower - self.power --lower location power now that card is taken back
+        cardOwner.mana = cardOwner.mana + self.cost --give player their mana back
+        break
+      end
+    end
+    
+    table.insert(destination.cards, self)
+    if #destination.cards == 1 then
+      newXCoord = destination.x
+    else
+      newXCoord = destination.x + (#destination.cards-1) * 70 
+    end
+    self:setLocation(newXCoord, destination.y)
+    self.isFaceUp = true
+    self.currentGroup = destination
   end
     
     
