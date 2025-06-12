@@ -52,33 +52,38 @@ function Player:setupDeck()
                       'woodenCow', 'zeus', 'medusa', 
                       'artemis', 'swordOfDamocles', 'cyclops',
                       'helios', 'nyx', 'icarus',
-                      'hydra', 'hercules', 'ares'
+                      'hydra', 'hercules', 'ares',
+                      'shipOfTheseus',
                     }
   local cardCosts = {5, 5, 6,  --minotaur, pegasus, titan
                       1, 5, 1, --woodenCow, zues, medusa
                       2, 3, 4, --artemis, swordofdamocles, cyclops
                       2, 3, 1,  --helios, nyx, icarus
-                      1, 2, 3    --hydra, hercules, ares
+                      1, 2, 3,    --hydra, hercules, ares
+                      1,        --theseus,
                     }
   local cardPowers = {9, 9, 12,
                       1, 9, 2,
                       2, 7, 7,
                       9, 5, 1,
-                      3, 4, 5
+                      3, 4, 5,
+                      1
                     }
       
   local cardEffects = {Card.noEffect, Card.noEffect, Card.noEffect,
                         Card.noEffect, Card.zeusEffect, Card.medusaEffect,
                         Card.artemisEffect, Card.swordOfDamoclesEffect, Card.cyclopsEffect,
                         Card.heliosEffect, Card.nyxEffect, Card.icarusEffect,
-                        Card.hydraEffect, Card.herculesEffect, Card.aresEffect
+                        Card.hydraEffect, Card.herculesEffect, Card.aresEffect,
+                        Card.shipOfTheseusEffect,
                       }
   
   local cardTriggers = {'vanilla' , 'vanilla' , 'vanilla', 
                         'vanilla' , 'onReveal', 'whileActive',
                         'onReveal', 'onTurnEnd', 'onReveal',
                         'onTurnEnd', 'onReveal', 'onTurnEnd',
-                        'onDiscard', 'onReveal', 'onReveal'
+                        'onDiscard', 'onReveal', 'onReveal',
+                        'onReveal',
                       }
 
                       

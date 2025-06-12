@@ -293,6 +293,16 @@ function Card:aresEffect(player, opponent) --gain +2 power for each enemy in thi
     self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
   end
 end
+
+function Card:shipOfTheseusEffect(player, opponent) --add a copy with +1 power to your hand
+  local newShip = Card('shipOfTheseus', 1, self.power + 1, 'onReveal', self.effect)
+  if #player.hand.cards < 7 then
+      table.insert(player.referenceToGameObjectList, newShip)
+      table.insert(player.drawDeck.cards, newShip)
+      player:drawToHand()
+  end
+end
+  
   
   
   
