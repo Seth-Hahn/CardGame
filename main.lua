@@ -7,6 +7,7 @@ local ResetButton = require "classes/resetButton"
 local DifficultyButton = require "classes/DifficultyButton"
 local UndoButton = require "classes/UndoButton"
 local PlayButton = require "classes/PlayButton"
+local BuildDeckButton = require "classes/BuildDeckButton"
 require "libraries/middleclass"
 
 
@@ -24,6 +25,9 @@ winnerSelected = false
 winner = nil
 difficultyLevel = 1
 onTitleScreen = true
+onDeckBuilderScreen = false
+numCardsPicked = 0
+builtDeck = {}
 
 --love functions--
 function love.load()
@@ -52,15 +56,17 @@ function love.load()
 end
 
 function love.draw() 
-  love.graphics.draw(background)
-  Player:drawToScreen()
-  AI:drawToScreen()
-  submitButton:drawToScreen()
-  resetButton:drawToScreen()
-  easyButton:drawToScreen()
-  mediumButton:drawToScreen()
-  hardButton:drawToScreen()
-  undoButton:drawToScreen()
+  if not onTitleScreen or not onDeckBuilderScreen then
+    love.graphics.draw(background)
+    Player:drawToScreen()
+    AI:drawToScreen()
+    submitButton:drawToScreen()
+    resetButton:drawToScreen()
+    easyButton:drawToScreen()
+    mediumButton:drawToScreen()
+    hardButton:drawToScreen()
+    undoButton:drawToScreen()
+  end
   
   if winnerSelected == true and winner ~= nil then
     local standardFont = love.graphics.getFont()
@@ -72,12 +78,67 @@ function love.draw()
   
   if onTitleScreen == true then
     love.graphics.draw(titleScreen)
-    playButton:drawToScreen()
+    if onDeckBuilderScreen == false then
+      playButton:drawToScreen()
+      buildDeckButton:drawToScreen()
+    end
+  end
+  
+  if onDeckBuilderScreen == true then
+    local standardFont = love.graphics.getFont()
+    local bigFont = love.graphics.newFont(48)
+    love.graphics.setFont(bigFont)
+    love.graphics.print(#builtDeck .. " / 20", screenWidth / 2, screenHeight * .8)
+    love.graphics.setFont(standardFont)
+    local wholeSetCardHolder = {}
+    for i = 1, #Player.drawDeck.cards, 1 do
+      table.insert(wholeSetCardHolder, Player.drawDeck.cards[i])
+    end
+    for i = 1, #Player.hand.cards, 1 do
+      table.insert(wholeSetCardHolder, Player.hand.cards[i])
+    end
+    
+    local numCardsDrawn = 1
+    for row = 1, 5, 1 do
+      for column = 1, 9, 1 do
+        if wholeSetCardHolder[numCardsDrawn] ~= nil then
+          local card = wholeSetCardHolder[numCardsDrawn]
+          card:setLocation((screenWidth*.1)+ (column * 150), screenHeight * .05 + (row * 150))
+          card.isFaceUp = true
+          card:drawToScreen()
+          numCardsDrawn = numCardsDrawn + 1
+        end
+      end
+    end
+    
   end
     
 end
 
 function love.update(dt)
+  --handle deck builder 
+  if onDeckBuilderScreen and #builtDeck == 20 then 
+    onDeckBuilderScreen = false
+    onTitleScreen = false
+    for i = #Player.drawDeck.cards, 1, -1 do
+      Player.drawDeck.cards[i].currentGroup = nil
+      Player.drawDeck.cards[i] = nil
+    end
+    for i = #Player.hand.cards, 1, -1 do 
+      Player.hand.cards[i].currentGroup = nil
+      Player.hand.cards[i] = nil
+    end
+      
+    for i = 1, #builtDeck, 1 do
+      local card = builtDeck[i]
+        card:setLocation(Player.drawDeck.x, Player.drawDeck.y - (Player.drawDeck.y / 20) )
+        card.isFaceUp = false
+        table.insert(Player.drawDeck.cards, 1, card)
+        card.currentGroup = Player.drawDeck
+    end
+    Player.drawDeck:shuffleDeck()
+    Player:drawToHand(turnNumber)
+  end
   --handle card effects that run while the card is active
   --do on turn end effects for any cards which have been played
   for i = #Player.playedCards, 1, -1 do
@@ -177,6 +238,11 @@ function love.mousereleased(mx,my,button)
     isDragging = false
     
     if selectedObject ~= nil then
+      --logic for deckBuilder
+      if onDeckBuilderScreen and selectedObject.isPlayingCard then
+        table.insert(builtDeck, selectedObject)
+      end
+      
       --logic for clicking the submit button
       if selectedObject.isSubmitButton then
         submitTurn()
@@ -197,6 +263,10 @@ function love.mousereleased(mx,my,button)
       
       if selectedObject.isPlayButton then
         onTitleScreen = false
+      end
+      
+      if selectedObject.isBuildDeckButton then
+        onDeckBuilderScreen = true
       end
       
       --logic for placing a card down
@@ -382,6 +452,9 @@ function resetGame()
   winnerSelected = false
   winner = nil
   onTitleScreen = true
+  onDeckBuilderScreen = false
+  numCardsPicked = 0
+  builtDeck = {}
   
   --reset player and AI
   
@@ -409,7 +482,9 @@ function screenSetup()
   -- load title screen and associated buttons
   titleScreen = love.graphics.newImage("assets/img/titleScreen.png")
   playButton = PlayButton(screenWidth / 2, screenHeight * .6)
+  buildDeckButton = BuildDeckButton(screenWidth / 2, screenHeight * .7)
   table.insert(drawableObjects, 1, playButton)
+  table.insert(drawableObjects, 1, buildDeckButton)
   
   -- load green background
   background = love.graphics.newImage("assets/img/solitaireBackground.png")

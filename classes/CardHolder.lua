@@ -25,8 +25,11 @@ function CardHolder:drawToScreen()
       self.cards[i]:drawToScreen()
     end
   end
-  
-  love.graphics.print(self.holderType, self.x, self.y +100)
+  if self.holderType == "DrawDeck" then
+    love.graphics.print(self.holderType .. "(" .. (#self.cards) .. ")", self.x, self.y +100)
+  else
+    love.graphics.print(self.holderType, self.x, self.y +100)
+  end
 end
 
 function CardHolder:clickedOn()

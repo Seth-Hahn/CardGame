@@ -13,6 +13,7 @@ function Card:initialize(name, cost, power, effectTrigger, effect)
   self.front = love.graphics.newImage("assets/img/" .. name .. ".png")
   self.back = love.graphics.newImage("assets/img/cardBack.png")
   self.turnPlayed = -1
+  self.isPlayingCard = true
   
   self.x = nil
   self.y = nil
