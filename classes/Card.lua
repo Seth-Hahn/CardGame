@@ -101,7 +101,7 @@ function Card:moveFromTo(originalLocation, destination, cardOwner, turnNumber)
       end
     end
     
-    table.insert(destination.cards, self)
+    table.insert(destination.cards, #destination.cards + 1, self)
     if #destination.cards == 1 then
       newXCoord = destination.x
     else

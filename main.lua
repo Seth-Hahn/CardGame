@@ -234,6 +234,11 @@ function undoStage() --go through each holder and put cards which were just plac
       local card = currentLocation[i]
       if card.turnPlayed == turnNumber then
         card:moveFromTo(card.currentGroup, Player.hand, Player, turnNumber)
+        for i = #Player.playedCards, 1, -1 do
+          if Player.playedCards[i] == card then -- take card out of played cards group
+            table.remove(Player.playedCards, i)
+          end
+        end
       end
     end
   end

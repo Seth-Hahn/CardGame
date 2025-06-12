@@ -42,9 +42,11 @@ function AI:takeTurn(turnNumber)
   elseif self.difficulty == 2 then
     chanceToStopPlayingCards = 50
     manaCapMultiplier = 1.5
+    amountOfMoves = turnNumber
   elseif self.difficulty == 3 then
     chanceToStopPlayingCards = 25
     manaCapMultiplier = 2.5 
+    amountOfMoves = turnNumber
   end
   
   while amountOfMoves > 0 and #self.hand.cards > 0 and playAnotherCard do
