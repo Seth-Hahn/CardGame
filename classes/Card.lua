@@ -302,6 +302,14 @@ function Card:shipOfTheseusEffect(player, opponent) --add a copy with +1 power t
       player:drawToHand()
   end
 end
+
+function Card:pandoraEffect(player, opponent) --if no ally cards are here, lower card power by 5
+  if #self.currentGroup.cards == 1 then
+    self.currentGroup.totalPower = self.currentGroup.totalPower - self.power 
+    self.power = self.power - 5
+    self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+  end
+end
   
   
   
