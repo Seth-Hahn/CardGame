@@ -14,6 +14,7 @@ function Card:initialize(name, cost, power, effectTrigger, effect)
   self.back = love.graphics.newImage("assets/img/cardBack.png")
   self.turnPlayed = -1
   self.isPlayingCard = true
+  self.discardSoundEffect = love.audio.newSource("assets/mp3/onDiscard.mp3" , "static")
   
   self.x = nil
   self.y = nil
@@ -67,6 +68,7 @@ function Card:moveFromTo(originalLocation, destination, cardOwner, turnNumber)
   end
   
   if destination.holderType == 'DiscardPile' then
+    self.discardSoundEffect:play()
     for i = 4, 1, -1 do
         if originalLocation.cards[i] == self then --find the card in its group and remove it
           table.remove(originalLocation.cards, i)

@@ -52,6 +52,11 @@ function love.load()
   Player.opposingPlayer = AI
   AI.opposingPlayer = Player
   
+  --load sound effects
+  cardPlacedSound = love.audio.newSource("assets/mp3/cardPlaced.mp3", "static")
+  undoSoundEffect = love.audio.newSource("assets/mp3/undoSoundEffect.mp3", "static")
+  
+  
   
 end
 
@@ -258,6 +263,7 @@ function love.mousereleased(mx,my,button)
       end
       if selectedObject.isUndoButton then
         undoStage()
+        undoSoundEffect:play()
         return
       end
       
@@ -283,6 +289,8 @@ function love.mousereleased(mx,my,button)
                   selectedObject:moveFromTo(selectedObject.currentGroup, drawableObjects[i], Player, turnNumber)
                   Player.mana = Player.mana - selectedObject.cost
                   table.insert(Player.playedCards, selectedObject)
+                  
+                  cardPlacedSound:play()
                 end
             else
                 selectedObject:setLocation(selectedObjectOriginalX, selectedObjectOriginalY)
