@@ -274,5 +274,27 @@ function Card:herculesEffect(player, opponent) --double power if this is the str
   self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
   return 
 end
+
+function Card:aresEffect(player, opponent) --gain +2 power for each enemy in this location 
+  local aresCurrentGroup = self.currentGroup.holderType
+  local playLocationsForOpponent = {opponent.playLocationOne, opponent.playLocationTwo,opponent.playLocationThree}
+  local opposingLocation = nil
+  
+  for i = 1, #playLocationsForOpponent, 1 do
+    if aresCurrentGroup == playLocationsForOpponent[i].holderType then
+      opposingLocation = playLocationsForOpponent[i]
+      break
+    end
+  end
+  
+  for i = 1, #opposingLocation.cards, 1 do
+    self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
+    self.power = self.power + 2
+    self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+  end
+end
+  
+  
+  
 return Card
   
