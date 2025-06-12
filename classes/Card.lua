@@ -324,9 +324,11 @@ end
 
 function Card:atlasEffect(player, opponent) --loses 1 power if your side of this location is full
   if #self.currentGroup.cards == 4 then
-    self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
-    self.power = self.power -1 
-    self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+    if self.currentGroup ~= nil and self.currentGroup.totalPower ~= nil then
+      self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
+      self.power = self.power -1 
+      self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+    end
   end
 end
   
