@@ -49,20 +49,31 @@ function AI:takeTurn(turnNumber)
     amountOfMoves = turnNumber
   end
   
+  local cardsInHandChecked = {}
   while amountOfMoves > 0 and #self.hand.cards > 0 and playAnotherCard do
     local locationToPlace = playLocations[love.math.random(1,3)] --determine random location to play card
     local cardToPlace = self.hand.cards[love.math.random(1,#self.hand.cards)] --pick random card to play
-      
+    for key, card in ipairs(cardsInHandChecked) do --put card in the checked cards table if not already in there 
+      if card == cardToPlace then 
+        break
+      elseif card ~= cardToPlace and key == #cardsInHandChecked then
+        table.insert(cardsInHandChecked, cardToPlace)
+      end
+    end
+    local cardChosen = false
       if cardToPlace.cost < (manaCapMultiplier*turnNumber) then
         cardToPlace:moveFromTo(cardToPlace.currentGroup, locationToPlace, self)
         cardToPlace.isFaceUp = false
         table.insert(self.playedCards, cardToPlace)
+        cardChosen = true
       end
       amountOfMoves = amountOfMoves - 1
       
     local coinFlip = love.math.random(0,100) --randomly determines if the ai will play another card
     if coinFlip <= chanceToStopPlayingCards then
       playAnotherCard = false
+    elseif cardChosen == false and #cardsInHandChecked ~= #self.hand.cards then--pick another card if one wasnt played and they havent all been checked
+      amountOfMoves = amountOfMoves + 1
     end
   end
 end
