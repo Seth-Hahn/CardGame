@@ -313,8 +313,18 @@ end
 
 function Card:hadesEffect(player, opponent) --gain +2 power for each card in your discard pile
   for i = 1, #player.discardPile.cards, 1 do
+    if self.currentGroup ~= nil and self.currentGroup.totalPower ~= nil then
+      self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
+      self.power = self.power + 2
+      self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+    end
+  end
+end
+
+function Card:atlasEffect(player, opponent) --loses 1 power if your side of this location is full
+  if #self.currentGroup.cards == 4 then
     self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
-    self.power = self.power + 2
+    self.power = self.power -1 
     self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
   end
 end

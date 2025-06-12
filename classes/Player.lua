@@ -53,21 +53,24 @@ function Player:setupDeck()
                       'artemis', 'swordOfDamocles', 'cyclops',
                       'helios', 'nyx', 'icarus',
                       'hydra', 'hercules', 'ares',
-                      'shipOfTheseus', 'pandora' , 'hades'
+                      'shipOfTheseus', 'pandora' , 'hades',
+                      'atlas',
                     }
   local cardCosts = {5, 5, 6,  --minotaur, pegasus, titan
                       1, 5, 1, --woodenCow, zues, medusa
                       2, 3, 4, --artemis, swordofdamocles, cyclops
                       2, 3, 1,  --helios, nyx, icarus
                       1, 2, 3,    --hydra, hercules, ares
-                      1, 5, 4      --theseus, pandora, hades
+                      1, 5, 4,      --theseus, pandora, hades
+                      3,          --atlas
                     }
   local cardPowers = {9, 9, 12,
                       1, 9, 2,
                       2, 7, 7,
                       9, 5, 1,
                       3, 4, 5,
-                      1, 10, 6
+                      1, 10, 6,
+                      6,
                     }
       
   local cardEffects = {Card.noEffect, Card.noEffect, Card.noEffect,
@@ -75,7 +78,8 @@ function Player:setupDeck()
                         Card.artemisEffect, Card.swordOfDamoclesEffect, Card.cyclopsEffect,
                         Card.heliosEffect, Card.nyxEffect, Card.icarusEffect,
                         Card.hydraEffect, Card.herculesEffect, Card.aresEffect,
-                        Card.shipOfTheseusEffect, Card.pandoraEffect, Card.hadesEffect
+                        Card.shipOfTheseusEffect, Card.pandoraEffect, Card.hadesEffect,
+                        Card.atlasEffect,
                       }
   
   local cardTriggers = {'vanilla' , 'vanilla' , 'vanilla', 
@@ -83,7 +87,8 @@ function Player:setupDeck()
                         'onReveal', 'onTurnEnd', 'onReveal',
                         'onTurnEnd', 'onReveal', 'onTurnEnd',
                         'onDiscard', 'onReveal', 'onReveal',
-                        'onReveal', 'onReveal', 'onReveal'
+                        'onReveal', 'onReveal', 'onReveal',
+                        'onTurnEnd',
                       }
 
                       
