@@ -6,6 +6,7 @@ local SubmitButton = require "classes/SubmitButton"
 local ResetButton = require "classes/resetButton"
 local DifficultyButton = require "classes/DifficultyButton"
 local UndoButton = require "classes/UndoButton"
+local PlayButton = require "classes/PlayButton"
 require "libraries/middleclass"
 
 
@@ -22,6 +23,7 @@ pointsToWin = 25
 winnerSelected = false
 winner = nil
 difficultyLevel = 1
+onTitleScreen = true
 
 --love functions--
 function love.load()
@@ -46,6 +48,7 @@ function love.load()
   Player.opposingPlayer = AI
   AI.opposingPlayer = Player
   
+  
 end
 
 function love.draw() 
@@ -65,6 +68,11 @@ function love.draw()
     love.graphics.setFont(bigFont)
     love.graphics.print(winner.tag .. " has Won!", screenWidth / 2, screenHeight / 2)
     love.graphics.setFont(standardFont)
+  end
+  
+  if onTitleScreen == true then
+    love.graphics.draw(titleScreen)
+    playButton:drawToScreen()
   end
     
 end
@@ -185,6 +193,10 @@ function love.mousereleased(mx,my,button)
       if selectedObject.isUndoButton then
         undoStage()
         return
+      end
+      
+      if selectedObject.isPlayButton then
+        onTitleScreen = false
       end
       
       --logic for placing a card down
@@ -369,6 +381,7 @@ function resetGame()
   pointsToWin = 25
   winnerSelected = false
   winner = nil
+  onTitleScreen = true
   
   --reset player and AI
   
@@ -393,6 +406,11 @@ function screenSetup()
       borderless = false,
       resizable = false
   })
+  -- load title screen and associated buttons
+  titleScreen = love.graphics.newImage("assets/img/titleScreen.png")
+  playButton = PlayButton(screenWidth / 2, screenHeight * .6)
+  table.insert(drawableObjects, 1, playButton)
+  
   -- load green background
   background = love.graphics.newImage("assets/img/solitaireBackground.png")
   
@@ -411,6 +429,8 @@ function screenSetup()
   table.insert(drawableObjects, 1, mediumButton)
   hardButton = DifficultyButton(screenWidth * .9, screenHeight * .4, "hardButton", 3)
   table.insert(drawableObjects, 1, hardButton)
+  
+  --load undo button
   undoButton = UndoButton(screenWidth * .2, screenHeight  *.8)
   table.insert(drawableObjects, 1, undoButton)
 end
