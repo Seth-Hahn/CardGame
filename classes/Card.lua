@@ -310,6 +310,14 @@ function Card:pandoraEffect(player, opponent) --if no ally cards are here, lower
     self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
   end
 end
+
+function Card:hadesEffect(player, opponent) --gain +2 power for each card in your discard pile
+  for i = 1, #player.discardPile.cards, 1 do
+    self.currentGroup.totalPower = self.currentGroup.totalPower - self.power
+    self.power = self.power + 2
+    self.currentGroup.totalPower = self.currentGroup.totalPower + self.power
+  end
+end
   
   
   
